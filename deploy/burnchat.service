@@ -1,0 +1,35 @@
+# /etc/systemd/system/burnchat.service
+# Install: sudo cp burnchat.service /etc/systemd/system/
+#          sudo systemctl enable --now burnchat
+
+[Unit]
+Description=BurnChat — ephemeral zero-log chat
+After=network.target
+
+[Service]
+Type=simple
+User=burnchat
+Group=burnchat
+WorkingDirectory=/opt/burnchat
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+
+# Environment
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+# PRIVACY: suppress all stdout/stderr logging
+StandardOutput=null
+StandardError=null
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/burnchat
+PrivateTmp=true
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

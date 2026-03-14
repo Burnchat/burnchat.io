@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="robots" content="noindex">
+<title>BurnChat Widget</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d0d0d;--surface:#161616;--border:#2a2a2a;--text:#e0e0e0;--text-dim:#6a6a6a;--accent:#ff6b35;--font:'SF Mono','Cascadia Code','Fira Code','Consolas',monospace}
+html.light{--bg:#f5f3f0;--surface:#fff;--border:#ddd;--text:#1a1a1a;--text-dim:#888;--accent:#e05a2b}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;overflow:hidden}
+
+.embed-wrap{display:flex;flex-direction:column;height:100%}
+.embed-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0}
+.embed-room{font-size:11px;color:var(--text-dim);font-weight:600;display:flex;align-items:center;gap:6px}
+.embed-room .dot{width:6px;height:6px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.embed-count{font-size:10px;color:var(--text-dim)}
+.embed-logo{font-size:11px;color:var(--text-dim);text-decoration:none;font-weight:600}
+.embed-logo span{color:var(--accent)}
+.embed-logo:hover{text-decoration:none;color:var(--text)}
+
+#nick-bar{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;padding:20px}
+#nick-bar .label{color:var(--text-dim);font-size:12px}
+#nick-input{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 14px;font-family:var(--font);font-size:13px;width:180px;text-align:center;outline:none;border-radius:4px}
+#nick-input:focus{border-color:var(--accent)}
+.btn-join{background:var(--accent);color:#fff;border:none;padding:8px 20px;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;border-radius:4px}
+
+#chat-area{display:none;flex:1;flex-direction:column;overflow:hidden}
+#messages{flex:1;overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:1px}
+#messages::-webkit-scrollbar{width:3px}
+#messages::-webkit-scrollbar-track{background:transparent}
+#messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#anchor{height:1px}
+.msg{padding:3px 0;line-height:1.5;word-break:break-word;animation:fadeIn 0.15s ease;font-size:13px}
+.msg-user{font-weight:600;color:var(--text)}
+.msg-sys{color:var(--text-dim);font-size:11px;opacity:0.5;padding:4px 0}
+.msg-time{font-size:9px;color:var(--text-dim);opacity:0;margin-right:6px;transition:opacity 0.1s}
+.msg:hover .msg-time{opacity:0.4}
+@keyframes fadeIn{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:translateY(0)}}
+
+.input-bar{display:flex;padding:8px;gap:6px;border-top:1px solid var(--border);background:var(--surface);flex-shrink:0}
+#msg-input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;font-family:var(--font);font-size:13px;outline:none;border-radius:4px;min-width:0}
+#msg-input:focus{border-color:var(--accent)}
+#msg-input::placeholder{color:var(--text-dim);opacity:0.5}
+.btn-send{background:var(--accent);color:#fff;border:none;padding:8px 14px;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;border-radius:4px;flex-shrink:0}
+
+.welcome-msg{background:rgba(255,107,53,0.06);border-left:2px solid var(--accent);padding:6px 10px;margin:4px 0;font-size:12px;color:var(--text-dim);border-radius:0 4px 4px 0}
+</style>
+</head>
+<body>
+<div class="embed-wrap">
+  <div class="embed-header">
+    <div class="embed-room"><span class="dot"></span><span id="room-name"></span><span class="embed-count" id="user-count"></span></div>
+    <a href="https://burnchat.io" target="_blank" rel="noopener" class="embed-logo">burn<span>chat</span></a>
+  </div>
+  <div id="nick-bar">
+    <div class="label">pick a nickname to join</div>
+    <input type="text" id="nick-input" placeholder="anon" maxlength="24" autocomplete="off" spellcheck="false">
+    <button class="btn-join" onclick="joinChat()">Join Chat</button>
+  </div>
+  <div id="chat-area">
+    <div id="messages"><div id="anchor"></div></div>
+    <div class="input-bar">
+      <input type="text" id="msg-input" placeholder="type a message..." autocomplete="off" spellcheck="false">
+      <button class="btn-send" onclick="sendMsg()">send</button>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+// Parse config from URL params
+var params=new URLSearchParams(location.search);
+var roomId=params.get('room')||'lobby';
+var theme=params.get('theme')||'dark';
+var accent=params.get('accent')||'#ff6b35';
+var welcomeMsg=params.get('welcome')||'';
+var refHost=params.get('ref')||'';
+
+// Apply theme
+if(theme==='light')document.documentElement.classList.add('light');
+document.documentElement.style.setProperty('--accent',accent);
+document.getElementById('room-name').textContent=roomId;
+
+var socket=null;
+var myUsername='';
+
+// Join
+function joinChat(){
+  var name=document.getElementById('nick-input').value.trim()||'anon';
+  myUsername=name;
+  document.getElementById('nick-bar').style.display='none';
+  document.getElementById('chat-area').style.display='flex';
+  connectSocket();
+}
+document.getElementById('nick-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter')joinChat();
+});
+
+function connectSocket(){
+  socket=io({transports:['polling','websocket']});
+  socket.on('connect',function(){
+    socket.emit('join-room',{roomId:roomId,username:myUsername,password:''});
+  });
+  socket.on('room-joined',function(data){
+    myUsername=data.username;
+    document.getElementById('user-count').textContent=data.userCount+' online';
+    data.messages.forEach(function(msg){appendMsg(msg);});
+    if(welcomeMsg){
+      var el=document.createElement('div');
+      el.className='welcome-msg';
+      el.textContent=welcomeMsg;
+      document.getElementById('messages').insertBefore(el,document.getElementById('anchor'));
+    }
+    addSys('joined as '+data.username);
+  });
+  socket.on('chat-message',function(msg){appendMsg(msg);});
+  socket.on('user-joined',function(d){addSys(d.username+' joined');document.getElementById('user-count').textContent=d.userCount+' online';});
+  socket.on('user-left',function(d){addSys(d.username+' left');document.getElementById('user-count').textContent=d.userCount+' online';});
+  socket.on('room-burned',function(){addSys('Room burned');});
+  socket.on('nickname-taken',function(d){
+    document.getElementById('chat-area').style.display='none';
+    document.getElementById('nick-bar').style.display='flex';
+    addSys(d.message);
+  });
+  socket.on('error-msg',function(d){addSys(d.message);});
+}
+
+// Username colors
+var colors=['#ff6b35','#4caf50','#60a5fa','#f472b6','#a78bfa','#34d399','#fbbf24','#f87171','#818cf8','#fb923c','#22d3ee','#e879f9'];
+function getColor(name){var h=0;for(var i=0;i<name.length;i++){h=((h<<5)-h)+name.charCodeAt(i);h=h&h;}return colors[Math.abs(h)%colors.length];}
+
+function appendMsg(data){
+  var c=document.getElementById('messages');
+  var a=document.getElementById('anchor');
+  var el=document.createElement('div');el.className='msg';
+  var t=new Date(data.timestamp);
+  var ts=document.createElement('span');ts.className='msg-time';ts.textContent=t.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  var u=document.createElement('span');u.className='msg-user';u.textContent=data.username;
+  if(data.role==='admin')u.style.color='#ff3d00';
+  var sep=document.createElement('span');sep.style.cssText='color:var(--text-dim);opacity:0.4;';sep.textContent=': ';
+  var txt=document.createElement('span');txt.textContent=data.message;
+  el.appendChild(ts);el.appendChild(u);el.appendChild(sep);el.appendChild(txt);
+  c.insertBefore(el,a);
+  // Notify parent on new message
+  if(window.parent!==window){window.parent.postMessage({key:'burnchat',action:'notify'},'*');}
+}
+
+function addSys(text){
+  var c=document.getElementById('messages');
+  var a=document.getElementById('anchor');
+  var el=document.createElement('div');el.className='msg msg-sys';el.textContent='— '+text;
+  c.insertBefore(el,a);
+}
+
+function sendMsg(){
+  var input=document.getElementById('msg-input');
+  var msg=input.value.trim();
+  if(!msg||!socket)return;
+  input.value='';
+  socket.emit('chat-message',{message:msg});
+}
+document.getElementById('msg-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter')sendMsg();
+});
+</script>
+</body>
+</html>

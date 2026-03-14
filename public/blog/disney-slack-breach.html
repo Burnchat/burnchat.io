@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disney Lost 44 Million Slack Messages — BurnChat Blog</title>
+  <meta name="description" content="In July 2024, hacktivists exfiltrated 1.1TB from Disney's Slack — unreleased projects, credentials, passport numbers. A burn button could have prevented all of it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+    .post-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; gap: 16px; }
+    .post-meta .tag { color: var(--accent); }
+    .post h1 { font-family: var(--serif); font-size: 38px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px; }
+    .post-intro { font-size: 20px; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .post h2 { font-family: var(--serif); font-size: 26px; font-weight: 700; margin: 48px 0 16px; line-height: 1.3; }
+    .post p { margin-bottom: 20px; }
+    .post strong { color: #fff; }
+    .highlight-box { background: var(--surface); border-left: 3px solid var(--accent); padding: 20px 24px; margin: 32px 0; font-size: 16px; }
+    .highlight-box p { margin-bottom: 0; }
+    .stat-callout { font-family: var(--mono); font-size: 48px; font-weight: 600; color: var(--accent); text-align: center; padding: 32px 0; line-height: 1.2; }
+    .stat-callout small { display: block; font-size: 14px; color: var(--text-dim); font-weight: 400; margin-top: 8px; letter-spacing: 0.5px; }
+    .post ul { margin: 16px 0 20px 24px; list-style: none; }
+    .post ul li { position: relative; padding-left: 20px; margin-bottom: 10px; }
+    .post ul li::before { content: '—'; position: absolute; left: 0; color: var(--accent); }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; text-align: center; margin: 48px 0; }
+    .cta-box h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-dim); font-size: 16px; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; background: var(--accent); color: #fff; padding: 12px 28px; font-family: var(--mono); font-size: 14px; font-weight: 600; text-decoration: none; }
+    .cta-btn:hover { background: #cc5529; text-decoration: none; }
+    .post-footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 48px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); display: flex; justify-content: space-between; }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    .site-footer a { color: var(--accent); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+    .timeline { border-left: 2px solid var(--accent); margin: 32px 0; padding-left: 24px; }
+    .timeline-item { margin-bottom: 24px; }
+    .timeline-date { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 600; }
+    .timeline-text { font-size: 16px; margin-top: 4px; }
+    @media (max-width: 600px) { .post h1 { font-size: 28px; } .post { padding: 40px 20px 60px; } .stat-callout { font-size: 36px; } .post-footer { flex-direction: column; gap: 8px; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links"><a href="/blog/">blog</a><a href="/">open app</a></nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta">
+      <span class="tag">Data Breaches</span>
+      <span>10 min read</span>
+    </div>
+
+    <h1>Disney lost 44 million Slack messages. Here's what a burn button could have prevented.</h1>
+
+    <p class="post-intro">In July 2024, a hacktivist group called NullBulge breached Disney's internal Slack workspace and exfiltrated 1.1 terabytes of data — nearly 44 million messages from almost 10,000 channels. Unreleased project details. Source code. Login credentials. Passport numbers of cruise line employees. All of it stored. All of it stolen.</p>
+
+    <p>Disney's response was dramatic: they announced they would <strong>stop using Slack entirely</strong>. But the real lesson isn't about Slack specifically. It's about the fundamental risk of storing conversations at all.</p>
+
+    <p>Data that exists can be breached. Data that doesn't exist cannot. This is not philosophy — it's physics.</p>
+
+    <h2>The anatomy of a 1.1 terabyte chat breach</h2>
+
+    <p>The Disney breach wasn't sophisticated in its method. A single compromised credential gave attackers access to Disney's Slack workspace. From there, they could access nearly every channel — including private ones — because Slack's architecture stores everything centrally and grants broad access to authenticated users.</p>
+
+    <p>What they found was a corporate history in chat form:</p>
+
+    <ul>
+      <li><strong>44 million messages</strong> spanning years of internal communication</li>
+      <li><strong>18,800+ spreadsheets</strong> containing financial data, employee information, and operational details</li>
+      <li><strong>13,000+ PDFs</strong> including contracts, internal memos, and planning documents</li>
+      <li>Unreleased project timelines and creative assets</li>
+      <li>Login credentials shared casually in channels</li>
+      <li>Passport numbers and personal data of employees</li>
+    </ul>
+
+    <p>The attackers didn't need to hack Disney's databases or penetrate their production servers. They just needed access to the place where people <em>talked about</em> all those things. Slack was the single point of failure that gave them everything.</p>
+
+    <div class="stat-callout">
+      $4.88M
+      <small>Average global cost of a data breach in 2024 — an all-time high</small>
+    </div>
+
+    <h2>Disney is not an outlier</h2>
+
+    <p>It's tempting to dismiss this as a Disney problem — a uniquely high-profile target with a massive attack surface. But the pattern repeats across industries and company sizes:</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">September 2025</div>
+        <div class="timeline-text"><strong>Nikkei</strong> — Japan's largest financial publisher had its Slack workspace breached after a single employee's credentials were stolen. Chat histories of <strong>17,368 users</strong> were exposed, including internal financial reporting discussions.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2024</div>
+        <div class="timeline-text"><strong>AT&T</strong> — A metadata breach exposed call and text records for <strong>110 million customers</strong>. While not a chat breach specifically, it demonstrated how stored communication data becomes a target of staggering scale.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">October 2022</div>
+        <div class="timeline-text"><strong>Twitter v. Musk</strong> — Hundreds of private text messages between Elon Musk, Larry Ellison, Jack Dorsey, and other tech executives were unsealed as court exhibits. A <strong>$1 billion investment commitment</strong> made over text became public record.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2022</div>
+        <div class="timeline-text"><strong>Slack itself</strong> — Slack disclosed that employee tokens were stolen via a compromised vendor, giving attackers access to private GitHub repositories. Even the platform maker wasn't immune.</div>
+      </div>
+    </div>
+
+    <p>These aren't edge cases. They're the inevitable consequence of an architecture that stores everything forever. When you accumulate years of candid, informal communication in a searchable database, you're building a breach waiting to happen.</p>
+
+    <h2>The cost of stored conversations</h2>
+
+    <p>IBM's annual Cost of a Data Breach Report tracks the financial impact across industries. The numbers are sobering and accelerating:</p>
+
+    <p>The global average breach cost hit <strong>$4.88 million in 2024</strong> — a 10% increase from the previous year and an all-time high. In the United States, where most of these chat platforms are headquartered and used most heavily, the average was <strong>$10.22 million</strong>.</p>
+
+    <p>But cost-per-breach statistics undercount the damage. They don't capture the reputational cost of having your internal conversations published on the internet. They don't capture the chilling effect on candid communication when employees learn their messages are stored forever. They don't capture the legal exposure when years of casual comments become exhibit evidence.</p>
+
+    <p>Disney's decision to abandon Slack wasn't a technical decision. It was a recognition that the risk of accumulating years of searchable employee communication in a centralized, breachable system had become unacceptable.</p>
+
+    <h2>The "delete" illusion</h2>
+
+    <p>A common response to these concerns is: "I'll just delete sensitive messages." This fundamentally misunderstands how enterprise chat platforms work.</p>
+
+    <p>Slack's compliance export includes deleted messages. Microsoft Teams stores deleted messages in a hidden Exchange folder called SubstrateHolds. Discord preserves files on its CDN after account deletion. The "delete" button in every major chat platform is a <strong>UI feature, not a data operation</strong>. It hides the message from your screen while preserving it in the backend.</p>
+
+    <div class="highlight-box">
+      <p><strong>The delete button is a lie.</strong> It provides psychological comfort while offering zero actual protection. In a breach scenario, deleted messages are just as accessible as undeleted ones.</p>
+    </div>
+
+    <p>This is by design, not by accident. Enterprise customers — the ones paying for these platforms — demand data retention for compliance, legal hold, and regulatory obligations. The platforms are built to satisfy those customers, not to protect individual employees.</p>
+
+    <h2>What a burn button actually solves</h2>
+
+    <p>Now imagine a different architecture. Instead of storing messages in a database, messages exist only in server memory — volatile RAM that holds data only while the process is running. Instead of retaining everything forever, the system keeps only the last 100 messages for context, and discards older ones automatically.</p>
+
+    <p>And instead of a meaningless "delete" button, there's a <strong>burn button</strong> that any participant can press. When they do:</p>
+
+    <ul>
+      <li>Every message in the room is immediately wiped from memory</li>
+      <li>Every connected user is disconnected</li>
+      <li>The room ceases to exist</li>
+      <li>The JavaScript garbage collector reclaims the memory</li>
+      <li>There is nothing to recover, nothing to breach, nothing to subpoena</li>
+    </ul>
+
+    <p>This isn't a better delete button. It's a fundamentally different approach to communication. The conversation existed, served its purpose, and is now <strong>physically, irrecoverably gone</strong>.</p>
+
+    <p>If Disney's internal conversations had been conducted on ephemeral infrastructure — no logs, no database, no persistent storage — there would have been nothing for NullBulge to steal. Not because the security was better, but because the data simply didn't exist.</p>
+
+    <h2>The principle: you can't breach what isn't there</h2>
+
+    <p>The cybersecurity industry spends billions on firewalls, intrusion detection, endpoint protection, and threat intelligence. All of these tools share a common assumption: that data exists and must be defended.</p>
+
+    <p>Ephemeral architecture challenges that assumption. Instead of building bigger walls around accumulated data, it asks: <strong>what if the data simply wasn't there?</strong></p>
+
+    <p>This doesn't replace security for data that must persist — financial records, contracts, regulatory filings. But the vast majority of workplace communication doesn't fall into those categories. Brainstorming sessions, quick syncs, candid feedback, strategy discussions, sensitive HR conversations — none of this needs to exist in a searchable database for years.</p>
+
+    <p>The safest message isn't an encrypted message or a "deleted" message. It's a message that was never stored in the first place.</p>
+
+    <div class="cta-box">
+      <h3>Start a conversation that can't be breached</h3>
+      <p>No accounts. No logs. No database. Messages live in memory only.<br>Any participant can burn the room and everything in it. Instantly and forever.</p>
+      <a href="/" class="cta-btn">Create a room</a>
+    </div>
+
+    <div class="post-footer">
+      <a href="/blog/slack-dms-not-private">← Previous: Slack DMs aren't private</a>
+      <a href="/blog/ephemeral-content-generation">Next: Gen Z and ephemeral content →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/">Create a room</a><a href="/blog/">Blog</a></div>
+    <p>BurnChat — No accounts. No logs. No traces.</p>
+  </footer>
+
+</body>
+</html>

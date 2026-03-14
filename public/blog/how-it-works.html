@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a Room in 2 Seconds, Burn It in 1 — BurnChat</title>
+  <meta name="description" content="A quick walkthrough of BurnChat. Create rooms, share links, send messages and images, lock rooms with passwords, and burn everything when you're done.">
+  <meta name="keywords" content="how to use BurnChat, create disposable chat room, burn chat tutorial, ephemeral chat guide, temporary chat room how to">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Create a Room in 2 Seconds. Burn It in 1.">
+  <meta property="og:description" content="A quick walkthrough of BurnChat — create rooms, share links, send images, and burn everything when done.">
+  <meta property="og:url" content="https://burnchat.io/blog/how-it-works">
+  <meta property="og:site_name" content="BurnChat">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Create a Room in 2 Seconds. Burn It in 1.">
+  <meta name="twitter:description" content="The fastest walkthrough of BurnChat you'll ever read.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://burnchat.io/blog/how-it-works">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Theme detection — runs before CSS to prevent flash -->
+  <script>
+    (function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    html.light { --bg: #f5f3f0; --surface: #fff; --border: #ddd; --text: #1a1a1a; --text-dim: #888; --accent: #e05a2b; }
+    .theme-toggle { position: fixed; bottom: 16px; right: 16px; z-index: 800; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-dim); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 2px 16px rgba(255,107,53,0.3); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: all 0.3s; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+    .post-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; gap: 16px; }
+    .post-meta .tag { color: var(--accent); }
+    .post h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px; }
+    .post-intro { font-size: 20px; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .post h2 { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 44px 0 16px; line-height: 1.3; }
+    .post p { margin-bottom: 20px; } .post strong { color: #fff; }
+    .step { background: var(--surface); border-left: 3px solid var(--accent); padding: 20px 24px; margin: 24px 0; }
+    .step-num { font-family: var(--mono); font-size: 12px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .step p { margin-bottom: 0; font-size: 16px; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; text-align: center; margin: 48px 0; }
+    .cta-box h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-dim); font-size: 16px; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; background: var(--accent); color: #fff; padding: 12px 28px; font-family: var(--mono); font-size: 14px; font-weight: 600; text-decoration: none; } .cta-btn:hover { background: #cc5529; text-decoration: none; }
+    .post-footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 48px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); display: flex; justify-content: space-between; }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); } .site-footer a { color: var(--accent); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+    @media (max-width: 600px) { .post h1 { font-size: 28px; } .post { padding: 40px 20px 60px; } .post-footer { flex-direction: column; gap: 8px; } }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Create a Room in 2 Seconds, Burn It in 1",
+    "author": { "@type": "Organization", "name": "BurnChat" },
+    "publisher": { "@type": "Organization", "name": "BurnChat", "url": "https://burnchat.io" },
+    "url": "https://burnchat.io/blog/how-it-works",
+    "datePublished": "2026-03-11",
+    "dateModified": "2026-03-11"
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links"><a href="/blog/">blog</a><a href="/">open app</a></nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta"><span class="tag">Guide</span><span>3 min read</span></div>
+
+    <h1>Create a room in 2 seconds. Burn it in 1.</h1>
+
+    <p class="post-intro">BurnChat has no onboarding flow, no tutorial popup, no welcome email. But here's a quick rundown of everything you can do — it's shorter than you'd think.</p>
+
+    <h2>Making a room</h2>
+
+    <p>Go to <a href="/">burnchat.io</a>. You'll see one button that says "Create a room." Click it. That's it — you now have a private room with a unique link like <strong>burnchat.io/k3m7xp2v</strong>.</p>
+
+    <p>You'll get asked for a nickname. Type whatever you want. It's not tied to anything. You could be "dave" one time and "toaster" the next. We don't check and we don't save it.</p>
+
+    <div class="step">
+      <div class="step-num">Optional: Room password</div>
+      <p>Before you create the room, there's a checkbox that says "add a room password." Tick it, type a password, and now anyone who clicks the link will need that password to get in. Useful if you're dropping the link somewhere semi-public and only want certain people to actually join.</p>
+    </div>
+
+    <h2>Sharing the link</h2>
+
+    <p>Once you're in the room, hit the <strong>"copy link"</strong> button in the top right. Send that link to whoever you want to talk to — text it, email it, scribble it on a napkin, whatever works. Anyone with the link (and the password, if you set one) can join.</p>
+
+    <p>People who join late will see the last 100 messages so they have context. They won't see anything before that because anything before that is already gone from memory.</p>
+
+    <h2>Sending messages and images</h2>
+
+    <p>Type in the box at the bottom and hit send. Or press Enter. You know how chat works.</p>
+
+    <p>There's a <strong>"+"</strong> button next to the message box — that's for images. Tap it, pick a photo. BurnChat will automatically shrink and compress it in your browser before sending, so even a massive 15MB phone photo gets squeezed down to a few hundred KB. The image never touches our disk. It travels through memory just like text messages and dies the same way.</p>
+
+    <h2>Locking a room after it's created</h2>
+
+    <p>Changed your mind and want to add a password after people have joined? Hit the <strong>"lock"</strong> button in the header. Set a password and it'll take effect immediately — anyone new who tries to join will need it. Everyone already in the room sees a message that a password was set.</p>
+
+    <p>Want to remove it later? Same button, leave the password blank, done.</p>
+
+    <h2>Burning it all down</h2>
+
+    <p>This is the part people actually came for.</p>
+
+    <p>The red <strong>"burn"</strong> button is in the top right corner. Any person in the room can press it — not just the creator. You'll get a confirmation popup because we're not monsters. Confirm it, and here's what happens:</p>
+
+    <div class="step">
+      <div class="step-num">What burn does</div>
+      <p>Every message — text and images — gets wiped from memory. Every person in the room gets disconnected. The room ID stops existing. There is no undo. There is no "recently deleted" folder. It's gone. The server's garbage collector reclaims the memory within milliseconds.</p>
+    </div>
+
+    <p>After the burn, everyone sees a screen confirming the room was destroyed, with a counter showing how many rooms have been burned total. One click to make a new room if you want to start fresh.</p>
+
+    <h2>Auto-burn: destroy the room when everyone leaves</h2>
+
+    <p>There's a button in the header called <strong>auto-burn</strong>. It does exactly what it sounds like — when the last person leaves the room, instead of sitting around for 30 seconds waiting to see if someone comes back, the room burns immediately. Messages wiped, room gone, no delay.</p>
+
+    <p>When you toggle it on, it turns red and shows "auto-burn: on" with a small hint that says "room burns when empty." Everyone in the room sees a system message saying you enabled it. Toggle it off and it goes back to the normal 30-second cleanup window.</p>
+
+    <p>This is useful when you want to be absolutely sure the conversation doesn't linger in memory for even half a minute after everyone disconnects. Maybe you're sharing something sensitive and you want the room to self-destruct the instant the conversation is over. Hit auto-burn, close your tabs, done.</p>
+
+    <h2>What happens if you just... leave?</h2>
+
+    <p>If everyone leaves the room without burning it, we wait 30 seconds in case someone accidentally closed their tab. If nobody comes back, the room and everything in it gets deleted automatically. Same result as burning, just a bit slower.</p>
+
+    <p>And if somehow a room stays active for 24 hours straight (maybe you forgot about it), it auto-expires and cleans itself up. Nothing sticks around forever here.</p>
+
+    <h2>That's it</h2>
+
+    <p>There's no settings page. No profile to configure. No notification preferences. Open, chat, burn, gone. We kept it simple on purpose.</p>
+
+    <div class="cta-box">
+      <h3>Faster than reading about it</h3>
+      <p>Seriously. By the time you finished this article you could have already created, used, and burned three rooms.</p>
+      <a href="/" class="cta-btn">Create a room</a>
+    </div>
+
+    <div class="post-footer">
+      <a href="/blog/we-dont-care-why">← Previous: We don't care why</a>
+      <a href="/blog/privacy-is-not-a-feature">Next: Privacy isn't a feature →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/">Create a room</a><a href="/blog/">Blog</a></div>
+    <p>BurnChat — No accounts. No logs. No traces.</p>
+  </footer>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+  <script>
+    
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle("light");localStorage.setItem("burnchat-theme",h.classList.contains("light")?"light":"dark")}
+  </script>
+</body>
+</html>

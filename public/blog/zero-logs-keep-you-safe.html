@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Zero Logs and a Burn Button Keep You Safe — BurnChat</title>
+  <meta name="description" content="BurnChat stores nothing on disk. Messages live in RAM and vanish when the room closes. Here's why that keeps you safe.">
+  <meta name="keywords" content="zero log chat, no logs messaging, ephemeral chat security, burn chat, RAM only chat, private chat no storage">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Why Zero Logs and a Burn Button Keep You Safe">
+  <meta property="og:description" content="We don't store your messages in a database. We don't write them to disk. They live in server memory and nowhere else.">
+  <meta property="og:url" content="https://burnchat.io/blog/zero-logs-keep-you-safe">
+  <meta property="og:site_name" content="BurnChat">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Why Zero Logs and a Burn Button Keep You Safe">
+  <meta name="twitter:description" content="We don't store your messages. They live in RAM. Here's why that makes you safe.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://burnchat.io/blog/zero-logs-keep-you-safe">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Theme detection — runs before CSS to prevent flash -->
+  <script>
+    (function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    html.light { --bg: #f5f3f0; --surface: #fff; --border: #ddd; --text: #1a1a1a; --text-dim: #888; --accent: #e05a2b; }
+    .theme-toggle { position: fixed; bottom: 16px; right: 16px; z-index: 800; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-dim); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 2px 16px rgba(255,107,53,0.3); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: all 0.3s; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+    .post-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; gap: 16px; }
+    .post-meta .tag { color: var(--accent); }
+    .post h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px; }
+    .post-intro { font-size: 20px; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .post h2 { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 44px 0 16px; line-height: 1.3; }
+    .post p { margin-bottom: 20px; } .post strong { color: #fff; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; text-align: center; margin: 48px 0; }
+    .cta-box h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-dim); font-size: 16px; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; background: var(--accent); color: #fff; padding: 12px 28px; font-family: var(--mono); font-size: 14px; font-weight: 600; text-decoration: none; } .cta-btn:hover { background: #cc5529; text-decoration: none; }
+    .post-footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 48px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); display: flex; justify-content: space-between; }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); } .site-footer a { color: var(--accent); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+    @media (max-width: 600px) { .post h1 { font-size: 28px; } .post { padding: 40px 20px 60px; } .post-footer { flex-direction: column; gap: 8px; } }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Why Zero Logs and a Burn Button Keep You Safe",
+    "author": { "@type": "Organization", "name": "BurnChat" },
+    "publisher": { "@type": "Organization", "name": "BurnChat", "url": "https://burnchat.io" },
+    "url": "https://burnchat.io/blog/zero-logs-keep-you-safe",
+    "datePublished": "2026-03-11",
+    "dateModified": "2026-03-11"
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links"><a href="/blog/">blog</a><a href="/">open app</a></nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta"><span class="tag">Security</span><span>5 min read</span></div>
+
+    <h1>Why zero logs and a burn button keep you safe</h1>
+
+    <p class="post-intro">Here's the thing about most chat apps: they promise you privacy, then store every word you've ever typed in a database somewhere. We took a different approach. We don't store anything. Period.</p>
+
+    <p>Let's talk about what "zero logs" actually means, because a lot of services throw that phrase around and then bury the exceptions in paragraph 47 of their privacy policy.</p>
+
+    <p>When you chat on BurnChat, your messages go from your browser to our server and then straight to the other people in the room. That's it. They sit in the server's RAM — the same temporary memory your computer uses when you have a program open. Close the program, the memory gets recycled. There's no hard drive involved. No database. No file that someone could open later and read through your conversation.</p>
+
+    <h2>So what happens if someone hacks the server?</h2>
+
+    <p>This is where it gets interesting. Let's say the worst case scenario happens and someone gets into our server. What do they find? Whatever's in memory right now. Maybe a handful of active rooms. Not months of chat history. Not years of archived conversations. Just whatever's happening at this exact moment — and the second those rooms close, even that's gone.</p>
+
+    <p>Compare that to pretty much every other chat service. If someone breaches Slack, they get years of messages. Every DM, every channel, every deleted message (yeah, Slack keeps those too). That's exactly what happened to Disney in 2024 — hackers walked out with 44 million messages. Forty-four million. Because Slack had stored every single one.</p>
+
+    <p>You can't steal what doesn't exist. That's not a marketing line. That's just how it works.</p>
+
+    <h2>The burn button isn't a gimmick</h2>
+
+    <p>We gave every person in a room the ability to burn it. Not just the person who created it — anyone. One click, confirm, and the room is gone. Every message wiped from memory. Every user disconnected. The room ID stops existing.</p>
+
+    <p>Why let anyone do it? Because if you're in a conversation that needs to disappear, you shouldn't have to track down whoever made the room and ask them nicely. The whole point is speed. Something feels wrong, hit burn. Done. There's nothing left to worry about.</p>
+
+    <h2>No logs means no logs</h2>
+
+    <p>We turned off access logging on our web server. We turned off error logging. We turned off the system journal. The Node.js process doesn't write a single console.log for your requests. There is no log file on our server that says "user at IP address X visited room Y at time Z."</p>
+
+    <p>Most services log everything by default and then try to figure out what to delete later. We started from zero and didn't add anything back. The server knows what's happening right now, and it forgets everything the moment it's over.</p>
+
+    <p>Is that unusual? Yeah. Most developers would call it bad practice — how do you debug issues without logs? Honestly, it makes our job harder. But it makes your conversations safer, and that's the whole point of building this thing.</p>
+
+    <h2>What you're left with</h2>
+
+    <p>When you leave a BurnChat room — or burn it — there is no record that the room existed, no record of who was in it, no record of what was said. Not on our server, not in a backup, not in a log file. The JavaScript garbage collector reclaims the memory and it's done.</p>
+
+    <p>If someone showed up with a court order tomorrow asking us for your chat history, we'd have nothing to hand over. Not because we're refusing. Because there's literally nothing there.</p>
+
+    <p>That's what zero logs actually means.</p>
+
+    <div class="cta-box">
+      <h3>Try it yourself</h3>
+      <p>Create a room. Say something. Burn it. Then try to find any trace of it.</p>
+      <a href="/" class="cta-btn">Create a room</a>
+    </div>
+
+    <div class="post-footer">
+      <a href="/blog/">← All articles</a>
+      <a href="/blog/we-dont-care-why">Next: We don't care why →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/">Create a room</a><a href="/blog/">Blog</a></div>
+    <p>BurnChat — No accounts. No logs. No traces.</p>
+  </footer>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+  <script>
+    
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle("light");localStorage.setItem("burnchat-theme",h.classList.contains("light")?"light":"dark")}
+  </script>
+</body>
+</html>

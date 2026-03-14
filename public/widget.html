@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Embeddable Chat Widget for Websites — BurnChat</title>
+<meta name="description" content="Add a free embeddable chat room to any website in 60 seconds. No signup required. Ephemeral, zero-log group chat widget with real-time messaging. Customize theme, colors, and room settings.">
+<meta name="keywords" content="free chat widget, embeddable chat room, website chat widget, live chat widget, group chat embed, ephemeral chat widget, anonymous chat widget, no signup chat">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0a0a0a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Free Embeddable Chat Widget — Add Live Chat to Any Website">
+<meta property="og:description" content="Embed a disposable, zero-log chat room on your website in under 60 seconds. No accounts, no tracking, no data stored.">
+<meta property="og:url" content="https://burnchat.io/widget">
+<meta property="og:site_name" content="BurnChat">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Free Embeddable Chat Widget — BurnChat">
+<meta name="twitter:description" content="Add ephemeral group chat to any website. No signup, no logs, no tracking.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://burnchat.io/widget">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Source+Serif+4:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "BurnChat Widget",
+  "url": "https://burnchat.io/widget",
+  "description": "Free embeddable ephemeral chat room widget for websites. No accounts, no logs, no data stored.",
+  "applicationCategory": "CommunicationApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": ["Real-time group chat","Zero server logs","No signup required","Customizable theme","Embeddable widget","Ephemeral messages"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to embed BurnChat on your website",
+  "totalTime": "PT1M",
+  "step": [
+    {"@type": "HowToStep", "name": "Configure", "text": "Choose your room name, theme, and accent color"},
+    {"@type": "HowToStep", "name": "Copy", "text": "Copy the generated embed code"},
+    {"@type": "HowToStep", "name": "Paste", "text": "Paste the code into your website's HTML"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "Is BurnChat widget free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, BurnChat widget is completely free. No signup, no credit card, no limits."}},
+    {"@type": "Question", "name": "Does BurnChat store messages?", "acceptedAnswer": {"@type": "Answer", "text": "No. All messages exist only in server memory (RAM). When the room is empty or burned, everything is destroyed permanently."}},
+    {"@type": "Question", "name": "Can I customize the widget?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can customize the theme (dark/light), accent color, position, size, welcome message, and embed mode (floating bubble or inline)."}},
+    {"@type": "Question", "name": "Does it work on WordPress, Shopify, Wix?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The widget is a single script tag that works on any website — WordPress, Shopify, Wix, Squarespace, Webflow, React, Vue, Next.js, and any custom HTML site."}},
+    {"@type": "Question", "name": "Will the widget slow down my website?", "acceptedAnswer": {"@type": "Answer", "text": "No. The loader script is under 5KB, loads asynchronously, and the chat iframe only loads when a visitor clicks the chat button."}}
+  ]
+}
+</script>
+<script>
+(function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0a;--surface:#111;--surface2:#191919;--border:#222;--text:#d4d4d4;--text-dim:#666;--accent:#ff6b35;--accent-dim:#cc5529;--burn:#ff3d00;--green:#4caf50;--mono:'IBM Plex Mono',monospace;--serif:'Source Serif 4',Georgia,serif}
+html.light{--bg:#f5f3f0;--surface:#fff;--surface2:#f0ede8;--border:#ddd;--text:#1a1a1a;--text-dim:#888;--accent:#e05a2b}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+.theme-toggle{position:fixed;bottom:16px;right:16px;z-index:800;width:40px;height:40px;border-radius:50%;border:1px solid var(--text-dim);background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.25s;box-shadow:0 2px 12px rgba(0,0,0,0.4)}
+.theme-toggle:hover{border-color:var(--accent);transform:scale(1.1)}
+.theme-toggle .icon-sun,.theme-toggle .icon-moon{position:absolute;transition:all 0.3s}
+.theme-toggle .icon-sun{opacity:0;transform:rotate(-90deg) scale(0.5)}
+.theme-toggle .icon-moon{opacity:1;transform:rotate(0) scale(1)}
+html.light .theme-toggle .icon-sun{opacity:1;transform:rotate(0) scale(1)}
+html.light .theme-toggle .icon-moon{opacity:0;transform:rotate(90deg) scale(0.5)}
+
+.site-header{padding:24px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--text);text-decoration:none}.logo span{color:var(--accent)}.logo:hover{text-decoration:none}
+.nav-links{display:flex;gap:24px;font-family:var(--mono);font-size:13px}.nav-links a{color:var(--text-dim)}.nav-links a:hover{color:var(--accent);text-decoration:none}
+
+/* Hero */
+.hero{max-width:800px;margin:0 auto;padding:80px 32px 48px;text-align:center}
+.hero h1{font-family:var(--serif);font-size:42px;font-weight:700;line-height:1.15;letter-spacing:-0.5px;margin-bottom:16px}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero p{color:var(--text-dim);font-size:18px;line-height:1.6;max-width:560px;margin:0 auto}
+.hero-badges{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.hero-badge{font-family:var(--mono);font-size:11px;padding:5px 12px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim)}
+.hero-badge span{color:var(--accent)}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:800px;margin:0 auto;padding:0 32px 64px}
+.step{text-align:center;padding:24px}
+.step-num{font-family:var(--mono);font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.step-icon{font-size:32px;margin-bottom:8px}
+.step-text{font-size:14px;color:var(--text-dim);font-family:var(--mono)}
+
+/* Configurator */
+.configurator{max-width:1000px;margin:0 auto;padding:0 32px 80px}
+.config-title{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:24px;text-align:center}
+.config-grid{display:grid;grid-template-columns:320px 1fr;gap:32px;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface)}
+.config-panel{padding:28px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:20px}
+.config-group label{display:block;font-family:var(--mono);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.config-group input[type="text"],.config-group input[type="number"],.config-group select,.config-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 12px;font-family:var(--mono);font-size:13px;border-radius:4px;outline:none}
+.config-group input:focus,.config-group select:focus,.config-group textarea:focus{border-color:var(--accent)}
+.config-group textarea{resize:vertical;height:60px}
+.color-row{display:flex;gap:8px;align-items:center}
+.color-row input[type="color"]{width:36px;height:36px;border:1px solid var(--border);border-radius:4px;background:none;cursor:pointer;padding:2px}
+.color-row input[type="text"]{flex:1}
+.radio-row{display:flex;gap:8px}
+.radio-btn{flex:1;padding:7px;text-align:center;font-family:var(--mono);font-size:11px;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text-dim);transition:all 0.15s}
+.radio-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(255,107,53,0.08)}
+
+.preview-panel{padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--surface2);position:relative;min-height:500px}
+.preview-label{font-family:var(--mono);font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.preview-frame{border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.2);width:100%;max-width:380px;height:440px}
+.preview-frame iframe{width:100%;height:100%;border:none}
+.device-toggle{display:flex;gap:8px;margin-top:12px}
+.device-btn{font-family:var(--mono);font-size:10px;padding:4px 10px;border:1px solid var(--border);border-radius:12px;cursor:pointer;background:none;color:var(--text-dim);transition:all 0.15s}
+.device-btn.active{border-color:var(--accent);color:var(--accent)}
+
+/* Code output */
+.code-output{max-width:1000px;margin:0 auto;padding:0 32px 64px}
+.code-title{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.code-tabs{display:flex;gap:0;margin-bottom:0}
+.code-tab{font-family:var(--mono);font-size:11px;padding:8px 16px;border:1px solid var(--border);cursor:pointer;color:var(--text-dim);background:var(--bg);transition:all 0.15s;border-bottom:none}
+.code-tab:first-child{border-radius:6px 0 0 0}
+.code-tab:last-child{border-radius:0 6px 0 0}
+.code-tab.active{color:var(--accent);background:var(--surface);border-color:var(--accent) var(--accent) var(--surface) var(--accent)}
+.code-block{background:var(--surface);border:1px solid var(--border);border-radius:0 6px 6px 6px;padding:20px;position:relative;overflow-x:auto}
+.code-block pre{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--text);white-space:pre-wrap;word-break:break-all}
+.copy-btn{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:11px;padding:6px 14px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:var(--bg);color:var(--text-dim);transition:all 0.15s}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Use cases */
+.use-cases{max-width:800px;margin:0 auto;padding:0 32px 64px}
+.use-cases h2{font-family:var(--serif);font-size:28px;font-weight:700;margin-bottom:24px;text-align:center}
+.cases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.case-card{background:var(--surface);border:1px solid var(--border);padding:20px;border-radius:6px}
+.case-card .case-icon{font-size:24px;margin-bottom:8px}
+.case-card .case-title{font-family:var(--mono);font-size:13px;font-weight:600;margin-bottom:6px}
+.case-card .case-desc{font-size:14px;color:var(--text-dim);line-height:1.5}
+
+/* FAQ */
+.faq{max-width:680px;margin:0 auto;padding:0 32px 80px}
+.faq h2{font-family:var(--serif);font-size:28px;font-weight:700;margin-bottom:24px;text-align:center}
+.faq-item{border-bottom:1px solid var(--border);padding:16px 0}
+.faq-q{font-family:var(--mono);font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q::after{content:'+';color:var(--accent);font-size:18px;transition:transform 0.2s}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s;color:var(--text-dim);font-size:15px;line-height:1.6}
+.faq-item.open .faq-a{max-height:200px;padding-top:12px}
+
+/* CTA */
+.final-cta{text-align:center;padding:48px 32px 80px}
+.final-cta h2{font-family:var(--serif);font-size:28px;margin-bottom:12px}
+.final-cta p{color:var(--text-dim);margin-bottom:24px}
+.cta-btn{display:inline-block;padding:12px 32px;background:var(--accent);color:#fff;font-family:var(--mono);font-size:14px;font-weight:600;border-radius:4px;text-decoration:none}.cta-btn:hover{text-decoration:none;filter:brightness(1.15)}
+
+.footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--text-dim)}
+.footer a{color:var(--text-dim)}.footer a:hover{color:var(--accent)}
+
+@media(max-width:700px){
+  .hero h1{font-size:28px}
+  .hero{padding:48px 20px 32px}
+  .steps{grid-template-columns:1fr;gap:12px;padding:0 20px 40px}
+  .config-grid{grid-template-columns:1fr}
+  .config-panel{border-right:none;border-bottom:1px solid var(--border)}
+  .configurator,.code-output,.use-cases,.faq{padding-left:20px;padding-right:20px}
+  .preview-frame{max-width:100%;height:380px}
+  .cases-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="logo">burn<span>chat</span></a>
+  <nav class="nav-links"><a href="/blog/">blog</a><a href="/widget">widget</a><a href="/">open app</a></nav>
+</header>
+
+<section class="hero">
+  <h1>Add <em>ephemeral chat</em> to any website in 60 seconds</h1>
+  <p>Embed a free, zero-log chat room on your site. No signup. No tracking. No data stored. Just real-time conversation that disappears when the room is empty.</p>
+  <div class="hero-badges">
+    <span class="hero-badge"><span>✓</span> 100% Free</span>
+    <span class="hero-badge"><span>✓</span> No Signup</span>
+    <span class="hero-badge"><span>✓</span> Zero Logs</span>
+    <span class="hero-badge"><span>✓</span> Under 5KB</span>
+  </div>
+</section>
+
+<div class="steps">
+  <div class="step"><div class="step-num">Step 1</div><div class="step-icon">⚙️</div><div class="step-text">Configure your widget</div></div>
+  <div class="step"><div class="step-num">Step 2</div><div class="step-icon">📋</div><div class="step-text">Copy the embed code</div></div>
+  <div class="step"><div class="step-num">Step 3</div><div class="step-icon">🔥</div><div class="step-text">Paste into your site</div></div>
+</div>
+
+<section class="configurator">
+  <div class="config-title">Widget Configurator</div>
+  <div class="config-grid">
+    <div class="config-panel">
+      <div class="config-group">
+        <label>Room Name</label>
+        <input type="text" id="cfg-room" value="my-community" placeholder="my-room" maxlength="32" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9\-]/g,'');updatePreview()">
+      </div>
+      <div class="config-group">
+        <label>Theme</label>
+        <div class="radio-row">
+          <div class="radio-btn active" onclick="setRadio(this,'cfg-theme','dark')">Dark</div>
+          <div class="radio-btn" onclick="setRadio(this,'cfg-theme','light')">Light</div>
+          <div class="radio-btn" onclick="setRadio(this,'cfg-theme','auto')">Auto</div>
+        </div>
+        <input type="hidden" id="cfg-theme" value="dark">
+      </div>
+      <div class="config-group">
+        <label>Accent Color</label>
+        <div class="color-row">
+          <input type="color" id="cfg-color-pick" value="#ff6b35" oninput="document.getElementById('cfg-color').value=this.value;updatePreview()">
+          <input type="text" id="cfg-color" value="#ff6b35" maxlength="7" oninput="document.getElementById('cfg-color-pick').value=this.value;updatePreview()">
+        </div>
+      </div>
+      <div class="config-group">
+        <label>Embed Mode</label>
+        <div class="radio-row">
+          <div class="radio-btn active" onclick="setRadio(this,'cfg-mode','float')">Floating Bubble</div>
+          <div class="radio-btn" onclick="setRadio(this,'cfg-mode','inline')">Inline</div>
+        </div>
+        <input type="hidden" id="cfg-mode" value="float">
+      </div>
+      <div class="config-group">
+        <label>Position (floating mode)</label>
+        <div class="radio-row">
+          <div class="radio-btn active" onclick="setRadio(this,'cfg-position','bottom-right')">Bottom Right</div>
+          <div class="radio-btn" onclick="setRadio(this,'cfg-position','bottom-left')">Bottom Left</div>
+        </div>
+        <input type="hidden" id="cfg-position" value="bottom-right">
+      </div>
+      <div class="config-group">
+        <label>Welcome Message (optional)</label>
+        <textarea id="cfg-welcome" placeholder="Welcome! This chat is ephemeral." oninput="updatePreview()"></textarea>
+      </div>
+      <div class="config-group">
+        <label>Width (px)</label>
+        <input type="number" id="cfg-width" value="380" min="280" max="600" oninput="updatePreview()">
+      </div>
+      <div class="config-group">
+        <label>Height (px)</label>
+        <input type="number" id="cfg-height" value="520" min="300" max="800" oninput="updatePreview()">
+      </div>
+    </div>
+    <div class="preview-panel">
+      <div class="preview-label">Live Preview</div>
+      <div class="preview-frame" id="preview-frame">
+        <iframe id="preview-iframe" src="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="code-output">
+  <div class="code-title">Your Embed Code</div>
+  <div class="code-tabs">
+    <div class="code-tab active" onclick="setCodeTab(this,'html')">HTML</div>
+    <div class="code-tab" onclick="setCodeTab(this,'react')">React</div>
+    <div class="code-tab" onclick="setCodeTab(this,'iframe')">iFrame</div>
+  </div>
+  <div class="code-block">
+    <pre id="code-output"></pre>
+    <button class="copy-btn" onclick="copyCode()">📋 Copy</button>
+  </div>
+</section>
+
+<section class="use-cases">
+  <h2>Built for every kind of website</h2>
+  <div class="cases-grid">
+    <div class="case-card"><div class="case-icon">📝</div><div class="case-title">Blog Communities</div><div class="case-desc">Let readers discuss posts in real-time. Conversations disappear — no moderation headaches.</div></div>
+    <div class="case-card"><div class="case-icon">🎮</div><div class="case-title">Gaming & Fan Sites</div><div class="case-desc">Instant group chat for communities. No accounts needed to join the conversation.</div></div>
+    <div class="case-card"><div class="case-icon">🎤</div><div class="case-title">Events & Livestreams</div><div class="case-desc">Temporary chat for events. Room burns after the event — zero cleanup.</div></div>
+    <div class="case-card"><div class="case-icon">🔒</div><div class="case-title">Privacy-First Support</div><div class="case-desc">GDPR-compliant by design. No chat logs to worry about, ever.</div></div>
+    <div class="case-card"><div class="case-icon">💬</div><div class="case-title">Anonymous Feedback</div><div class="case-desc">Create safe spaces for honest discussion. No identities, no archives.</div></div>
+    <div class="case-card"><div class="case-icon">🏫</div><div class="case-title">Education & Study</div><div class="case-desc">Disposable study rooms. Collaborate live, then the room disappears.</div></div>
+  </div>
+</section>
+
+<section class="faq">
+  <h2>FAQ</h2>
+  <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Is BurnChat widget free?</div><div class="faq-a">Yes, completely free. No signup, no credit card, no usage limits. Embed it on as many pages as you want.</div></div>
+  <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Does BurnChat store messages?</div><div class="faq-a">No. All messages exist only in server memory (RAM). When the room empties or gets burned, everything is destroyed permanently. There is no database.</div></div>
+  <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Can I customize the widget?</div><div class="faq-a">Yes. You can customize theme (dark/light/auto), accent color, position, size, welcome message, and embed mode (floating bubble or inline).</div></div>
+  <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Does it work on WordPress, Shopify, Wix?</div><div class="faq-a">Yes. The widget is a single script tag that works on any website — WordPress, Shopify, Wix, Squarespace, Webflow, React, Vue, Next.js, and any custom HTML site.</div></div>
+  <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Will the widget slow down my website?</div><div class="faq-a">No. The loader is under 5KB, loads async, and the chat iframe only loads when a visitor clicks the chat button. Zero impact on your page speed scores.</div></div>
+  <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Can I remove the "Powered by BurnChat" branding?</div><div class="faq-a">We're working on a premium tier that removes branding. For now, all widgets include a small "Powered by BurnChat" link.</div></div>
+</section>
+
+<section class="final-cta">
+  <h2>Ready to add chat to your site?</h2>
+  <p>No account needed. Configure, copy, paste. Done in 60 seconds.</p>
+  <a href="#configurator" class="cta-btn" onclick="document.querySelector('.configurator').scrollIntoView({behavior:'smooth'});return false;">Get Your Embed Code</a>
+</section>
+
+<footer class="footer">
+  <a href="/">burnchat.io</a> · <a href="/blog/">blog</a> · <a href="/widget">widget</a> · <a href="https://github.com/AnonCatalyst" target="_blank" rel="noopener">github</a> · no logs · no trace
+</footer>
+
+<button class="theme-toggle" onclick="(function(){var h=document.documentElement;h.classList.toggle('light');localStorage.setItem('burnchat-theme',h.classList.contains('light')?'light':'dark')})()">
+  <span class="icon-sun">☀</span><span class="icon-moon">☾</span>
+</button>
+
+<script>
+var currentTab='html';
+
+function setRadio(el,inputId,value){
+  el.parentElement.querySelectorAll('.radio-btn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById(inputId).value=value;
+  updatePreview();
+}
+
+function setCodeTab(el,tab){
+  document.querySelectorAll('.code-tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  currentTab=tab;
+  updateCode();
+}
+
+function getConfig(){
+  return {
+    room:document.getElementById('cfg-room').value||'my-community',
+    theme:document.getElementById('cfg-theme').value,
+    accent:document.getElementById('cfg-color').value,
+    mode:document.getElementById('cfg-mode').value,
+    position:document.getElementById('cfg-position').value,
+    welcome:document.getElementById('cfg-welcome').value,
+    width:document.getElementById('cfg-width').value||'380',
+    height:document.getElementById('cfg-height').value||'520'
+  };
+}
+
+function updatePreview(){
+  var cfg=getConfig();
+  var params=new URLSearchParams({room:cfg.room,theme:cfg.theme,accent:cfg.accent,welcome:cfg.welcome,ref:'preview'});
+  document.getElementById('preview-iframe').src='/embed?'+params.toString();
+  updateCode();
+}
+
+function updateCode(){
+  var cfg=getConfig();
+  var code='';
+  if(currentTab==='html'){
+    code='<!-- BurnChat Widget -->\n<script\n  src="https://burnchat.io/widget.js"\n  data-room="'+cfg.room+'"\n  data-theme="'+cfg.theme+'"\n  data-accent="'+cfg.accent+'"\n  data-position="'+cfg.position+'"\n  data-mode="'+cfg.mode+'"\n  data-width="'+cfg.width+'"\n  data-height="'+cfg.height+'"';
+    if(cfg.welcome)code+='\n  data-welcome="'+cfg.welcome.replace(/"/g,'&quot;')+'"';
+    code+='\n  async>\n<\/script>';
+    if(cfg.mode==='inline')code='<div id="burnchat-widget"></div>\n'+code;
+  }else if(currentTab==='react'){
+    code='// Add to your component\nuseEffect(() => {\n  const script = document.createElement("script");\n  script.src = "https://burnchat.io/widget.js";\n  script.async = true;\n  script.setAttribute("data-room", "'+cfg.room+'");\n  script.setAttribute("data-theme", "'+cfg.theme+'");\n  script.setAttribute("data-accent", "'+cfg.accent+'");\n  script.setAttribute("data-mode", "'+cfg.mode+'");\n  document.body.appendChild(script);\n  return () => document.body.removeChild(script);\n}, []);';
+  }else if(currentTab==='iframe'){
+    var params=new URLSearchParams({room:cfg.room,theme:cfg.theme,accent:cfg.accent,welcome:cfg.welcome});
+    code='<iframe\n  src="https://burnchat.io/embed?'+params.toString()+'"\n  width="'+cfg.width+'"\n  height="'+cfg.height+'"\n  style="border:none;border-radius:8px;"\n  sandbox="allow-scripts allow-forms allow-popups"\n  loading="lazy"\n  title="BurnChat">\n</iframe>\n<div style="text-align:center;font:11px monospace;padding:4px;">\n  <a href="https://burnchat.io/widget" rel="nofollow" target="_blank" style="color:#888;text-decoration:none;">🔥 Powered by BurnChat</a>\n</div>';
+  }
+  document.getElementById('code-output').textContent=code;
+}
+
+function copyCode(){
+  var code=document.getElementById('code-output').textContent;
+  navigator.clipboard.writeText(code).then(function(){
+    var btn=document.querySelector('.copy-btn');
+    btn.textContent='✓ Copied!';
+    setTimeout(function(){btn.textContent='📋 Copy';},1500);
+  });
+}
+
+// Init
+updatePreview();
+</script>
+</body>
+</html>

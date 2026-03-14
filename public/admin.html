@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BurnChat Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111; --surface2: #1a1a1a; --border: #222;
+      --text: #e0e0e0; --text-dim: #666; --accent: #ff6b35; --burn: #ff3d00;
+      --green: #4caf50; --blue: #4a9eff; --yellow: #ffc107;
+      --font: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px; min-height: 100vh; }
+
+    /* Login */
+    #login {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100vh; gap: 16px;
+    }
+    #login h1 { font-size: 20px; font-weight: 600; }
+    #login h1 span { color: var(--accent); }
+    #login input {
+      background: var(--surface); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 16px; font-family: var(--font); font-size: 14px; width: 260px;
+      text-align: center; outline: none;
+    }
+    #login input:focus { border-color: var(--accent); }
+    #login button {
+      background: var(--accent); color: #fff; border: none; padding: 10px 28px;
+      font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    #login button:hover { background: #cc5529; }
+    .error { color: var(--burn); font-size: 12px; display: none; }
+
+    /* Dashboard */
+    #dashboard { display: none; padding: 24px; max-width: 900px; margin: 0 auto; }
+
+    .dash-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    }
+    .dash-header h1 { font-size: 18px; font-weight: 600; }
+    .dash-header h1 span { color: var(--accent); }
+    .dash-meta { color: var(--text-dim); font-size: 11px; }
+
+    .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-right: 6px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Cards grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 32px; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border); padding: 16px;
+      transition: border-color 0.15s;
+    }
+    .card:hover { border-color: var(--text-dim); }
+    .card-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .card-value { font-size: 28px; font-weight: 600; line-height: 1; }
+    .card-value.accent { color: var(--accent); }
+    .card-value.green { color: var(--green); }
+    .card-value.blue { color: var(--blue); }
+    .card-value.burn { color: var(--burn); }
+    .card-value.yellow { color: var(--yellow); }
+    .card-sub { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+
+    /* Section headers */
+    .section-title {
+      font-size: 12px; color: var(--accent); text-transform: uppercase;
+      letter-spacing: 2px; margin-bottom: 12px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Footer */
+    .dash-footer {
+      margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border);
+      font-size: 11px; color: var(--text-dim); text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+      #dashboard { padding: 16px; }
+      .card-value { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login -->
+  <div id="login">
+    <h1>burn<span>chat</span> admin</h1>
+    <input type="password" id="pw" placeholder="admin password" autocomplete="off">
+    <button onclick="doLogin()">enter</button>
+    <div class="error" id="error">wrong password</div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <div class="dash-header">
+      <h1><span class="live-dot"></span> burn<span>chat</span> admin</h1>
+      <div class="dash-meta">
+        <span>uptime: <strong id="uptime">-</strong></span>
+        &nbsp;·&nbsp;
+        <span>refreshes every 5s</span>
+      </div>
+    </div>
+
+    <div class="section-title">Live</div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-label">Active rooms</div>
+        <div class="card-value green" id="s-activeRooms">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Active users</div>
+        <div class="card-value green" id="s-activeUsers">-</div>
+      </div>
+    </div>
+
+    <div class="section-title">Rooms</div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-label">Rooms created</div>
+        <div class="card-value accent" id="s-roomsCreated">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Rooms burned</div>
+        <div class="card-value burn" id="s-roomsBurned">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Auto-burned</div>
+        <div class="card-value burn" id="s-roomsAutoburned">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Expired (24h)</div>
+        <div class="card-value yellow" id="s-roomsExpired">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Auto-cleaned</div>
+        <div class="card-value" id="s-roomsCleaned">-</div>
+        <div class="card-sub">empty room cleanup</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Peak active rooms</div>
+        <div class="card-value blue" id="s-peakActiveRooms">-</div>
+      </div>
+    </div>
+
+    <div class="section-title">Messages</div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-label">Text messages</div>
+        <div class="card-value accent" id="s-totalMessages">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Images sent</div>
+        <div class="card-value accent" id="s-totalImages">-</div>
+      </div>
+    </div>
+
+    <div class="section-title">Connections</div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-label">Total connections</div>
+        <div class="card-value blue" id="s-totalConnections">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Total disconnections</div>
+        <div class="card-value" id="s-totalDisconnections">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Peak concurrent users</div>
+        <div class="card-value blue" id="s-peakActiveUsers">-</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Passwords set</div>
+        <div class="card-value" id="s-passwordsSet">-</div>
+      </div>
+    </div>
+
+    <div class="dash-footer">
+      aggregate stats only · no PII · persists across restarts · <a href="/" style="color:var(--accent);">back to app</a>
+      <br><br>
+      <button onclick="resetStats()" style="background:none;border:1px solid var(--border);color:var(--text-dim);padding:6px 14px;font-family:var(--font);font-size:11px;cursor:pointer;">reset all stats</button>
+    </div>
+  </div>
+
+  <script>
+    var adminPw = '';
+    var interval = null;
+
+    document.getElementById('pw').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    function doLogin() {
+      adminPw = document.getElementById('pw').value.trim();
+      if (!adminPw) return;
+      fetch('/admin-burnchat/api/stats?pw=' + encodeURIComponent(adminPw))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.error) {
+            document.getElementById('error').style.display = 'block';
+            return;
+          }
+          document.getElementById('login').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          render(data);
+          interval = setInterval(refresh, 5000);
+        })
+        .catch(function() {
+          document.getElementById('error').style.display = 'block';
+        });
+    }
+
+    function refresh() {
+      fetch('/admin-burnchat/api/stats?pw=' + encodeURIComponent(adminPw))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data.error) render(data);
+        })
+        .catch(function() {});
+    }
+
+    function render(d) {
+      var fields = [
+        'activeRooms', 'activeUsers', 'roomsCreated', 'roomsBurned',
+        'roomsAutoburned', 'roomsExpired', 'roomsCleaned', 'peakActiveRooms',
+        'totalMessages', 'totalImages', 'totalConnections', 'totalDisconnections',
+        'peakActiveUsers', 'passwordsSet'
+      ];
+      fields.forEach(function(f) {
+        var el = document.getElementById('s-' + f);
+        if (el) el.textContent = formatNum(d[f] || 0);
+      });
+      document.getElementById('uptime').textContent = formatUptime(d.uptime || 0);
+    }
+
+    function formatNum(n) {
+      if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+      return n.toString();
+    }
+
+    function formatUptime(ms) {
+      var s = Math.floor(ms / 1000);
+      var d = Math.floor(s / 86400); s %= 86400;
+      var h = Math.floor(s / 3600); s %= 3600;
+      var m = Math.floor(s / 60); s %= 60;
+      var parts = [];
+      if (d > 0) parts.push(d + 'd');
+      if (h > 0) parts.push(h + 'h');
+      if (m > 0) parts.push(m + 'm');
+      parts.push(s + 's');
+      return parts.join(' ');
+    }
+
+    function resetStats() {
+      if (!confirm('Reset all stats to zero? This cannot be undone.')) return;
+      fetch('/admin-burnchat/api/reset?pw=' + encodeURIComponent(adminPw), { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.ok) refresh();
+        });
+    }
+  </script>
+
+</body>
+</html>

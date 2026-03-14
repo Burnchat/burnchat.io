@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BurnChat v2.7 — Voice Messages, Slash Commands, Admin Controls & More — BurnChat</title>
+  <meta name="description" content="The biggest BurnChat update yet. Voice messages that vanish, 20+ slash commands, room admin system, private messaging, timed mutes, nickname changes, and a polished new chat UI.">
+  <meta name="keywords" content="burnchat update, ephemeral voice messages, chat commands, room admin, private chat, anonymous chat features">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="BurnChat v2.7 — Voice Messages, Slash Commands, Admin Controls & More">
+  <meta property="og:description" content="The biggest BurnChat update yet. Voice messages, 20+ slash commands, admin system, private messaging, and more. All ephemeral. All zero-log.">
+  <meta property="og:url" content="https://burnchat.io/blog/v27-voice-commands-admin">
+  <meta property="og:site_name" content="BurnChat">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="BurnChat v2.7 — Voice Messages, Slash Commands, Admin Controls & More">
+  <meta name="twitter:description" content="The biggest BurnChat update yet. Voice messages, 20+ slash commands, admin system, private messaging, and more.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://burnchat.io/blog/v27-voice-commands-admin">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    (function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    html.light { --bg: #f5f3f0; --surface: #fff; --border: #ddd; --text: #1a1a1a; --text-dim: #888; --accent: #e05a2b; }
+    .theme-toggle { position: fixed; bottom: 16px; right: 16px; z-index: 800; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-dim); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 2px 16px rgba(255,107,53,0.3); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: all 0.3s; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+    .post-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; gap: 16px; }
+    .post-meta .tag { color: var(--accent); }
+    .post h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px; }
+    .post-intro { font-size: 20px; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .post h2 { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 44px 0 16px; line-height: 1.3; }
+    .post h3 { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin: 32px 0 12px; }
+    .post p { margin-bottom: 20px; } .post strong { color: #fff; }
+    html.light .post strong { color: #000; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; text-align: center; margin: 48px 0; border-radius: 4px; }
+    .cta-box h3 { font-family: var(--mono); font-size: 16px; margin-bottom: 12px; text-transform: none; letter-spacing: 0; color: var(--text); }
+    .cta-box p { color: var(--text-dim); font-size: 15px; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; padding: 12px 32px; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 14px; font-weight: 600; border-radius: 4px; text-decoration: none; } .cta-btn:hover { text-decoration: none; filter: brightness(1.15); }
+    .emoji-big { font-size: 48px; margin-bottom: 16px; display: block; }
+    .cmd-table { width: 100%; border-collapse: collapse; margin: 20px 0 32px; font-size: 15px; }
+    .cmd-table th { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); text-align: left; padding: 8px 12px; border-bottom: 2px solid var(--border); }
+    .cmd-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .cmd-table td:first-child { font-family: var(--mono); font-size: 14px; color: var(--accent); white-space: nowrap; }
+    .cmd-table td:last-child { color: var(--text-dim); font-size: 15px; }
+    .cmd-table tr:last-child td { border-bottom: none; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 28px 0 36px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 4px; }
+    .feature-card .feat-icon { font-size: 28px; margin-bottom: 8px; }
+    .feature-card .feat-title { font-family: var(--mono); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .feature-card .feat-desc { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
+    .footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    .footer a { color: var(--text-dim); } .footer a:hover { color: var(--accent); }
+    @media (max-width: 600px) {
+      .post h1 { font-size: 28px; }
+      .post { padding: 40px 20px 60px; }
+      .site-header { padding: 16px 20px; }
+      .nav-links { gap: 16px; font-size: 12px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .cmd-table { font-size: 13px; }
+      .cmd-table td:first-child { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links">
+      <a href="/blog/">blog</a>
+      <a href="/">open app</a>
+    </nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta">
+      <span class="tag">Major Update</span>
+      <span>March 2026</span>
+      <span>5 min read</span>
+    </div>
+
+    <h1>BurnChat v2.7 — Voice, Commands, and Room Control 🔥</h1>
+
+    <p class="post-intro">
+      This is the biggest update since BurnChat launched. Voice messages that vanish when the room burns. Over 20 slash commands. A full admin system. Private whispers. Timed mutes. Nickname changes. And a polished new chat experience. Everything still ephemeral. Everything still zero-log.
+    </p>
+
+    <h2>Voice Messages 🎤</h2>
+
+    <p>
+      Hit the microphone button, talk, and send. Your voice message appears as a playable waveform widget in the chat. <strong>No duration limit.</strong> Record for 5 seconds or 5 minutes — it's up to you.
+    </p>
+
+    <p>
+      Voice messages follow BurnChat's core promise: they exist only in server memory. When the room burns, every voice message is destroyed instantly. No audio files are ever written to disk. The data flows through WebSocket as base64, lives in RAM, and vanishes without a trace.
+    </p>
+
+    <p>
+      We also added listen-once tracking. After someone plays your voice message, their avatar appears below it — so you know exactly who heard it. Once played, the message locks and can't be replayed. Ephemeral audio for ephemeral conversations.
+    </p>
+
+    <h2>20+ Slash Commands ⌨️</h2>
+
+    <p>
+      Type <strong>/</strong> in the chat input and a categorized command menu appears instantly. Arrow keys or click to select. Every command is designed to work without accounts, without persistence, without leaving the chat.
+    </p>
+
+    <h3>Chat Commands</h3>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td>/msg nick message</td><td>Send a private whisper — only you and them see it</td></tr>
+      <tr><td>/msgvoice nick</td><td>Record and send a private voice message</td></tr>
+      <tr><td>/voice</td><td>Start recording a voice message</td></tr>
+      <tr><td>/endvoice</td><td>Stop recording and send</td></tr>
+      <tr><td>/nick newnickname</td><td>Change your nickname mid-conversation</td></tr>
+      <tr><td>/away message</td><td>Set an away status — auto-replies to PMs</td></tr>
+      <tr><td>/back</td><td>Remove your away status</td></tr>
+    </table>
+
+    <h3>Room Commands</h3>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td>/online</td><td>Show everyone currently in the room</td></tr>
+      <tr><td>/topic text</td><td>Set a room title visible in the header</td></tr>
+      <tr><td>/lock password</td><td>Password-protect the room</td></tr>
+      <tr><td>/join roomname</td><td>Open another room in a new tab</td></tr>
+      <tr><td>/clean</td><td>Clear your local chat history</td></tr>
+      <tr><td>/leave message</td><td>Leave with an optional farewell message</td></tr>
+      <tr><td>/burn</td><td>Destroy the room and everything in it</td></tr>
+    </table>
+
+    <h3>Admin Commands</h3>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td>/admin nick</td><td>Promote a user to room admin</td></tr>
+      <tr><td>/removeadmin nick</td><td>Demote an admin to regular user</td></tr>
+      <tr><td>/adminpw password</td><td>Set or authenticate with admin password</td></tr>
+      <tr><td>/kick nick reason</td><td>Kick a user — they can rejoin</td></tr>
+      <tr><td>/ban nick</td><td>Ban a user permanently from the room</td></tr>
+      <tr><td>/unban nick</td><td>Remove a ban</td></tr>
+      <tr><td>/mute nick mins</td><td>Mute a user — optionally timed</td></tr>
+      <tr><td>/unmute nick</td><td>Unmute a user</td></tr>
+    </table>
+
+    <h3>Fun Commands</h3>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td>/play snake</td><td>Jump straight into multiplayer Snake</td></tr>
+      <tr><td>/end</td><td>End the current game</td></tr>
+      <tr><td>/help</td><td>Show all available commands</td></tr>
+    </table>
+
+    <h2>Room Admin System 🛡️</h2>
+
+    <p>
+      Rooms now have an optional admin system. Here's how it works: <strong>when no admin exists, everyone can do everything.</strong> The moment someone runs <strong>/admin nickname</strong>, that person becomes admin — and from that point on, only admins can lock the room, ban users, mute people, set topics, or burn the room.
+    </p>
+
+    <p>
+      Admins can promote others, and the <strong>/adminpw</strong> command lets you set a room admin password. If the admin disconnects and rejoins, they just type <strong>/adminpw</strong> with the same password to get admin back. The password lives in RAM — it burns with the room.
+    </p>
+
+    <p>
+      This gives BurnChat rooms the moderation tools they need without requiring accounts, databases, or any form of identity. Your authority comes from a password, not a profile.
+    </p>
+
+    <h2>Private Messages & Away Status 💬</h2>
+
+    <p>
+      <strong>/msg nick your message</strong> sends a whisper that only you and the recipient can see. Private messages appear with an orange border and a "whisper" label so they're visually distinct from the public chat.
+    </p>
+
+    <p>
+      If someone PMs a user who's set themselves away with <strong>/away brb getting coffee</strong>, they'll automatically receive the away message as a private reply. When the away user sends any regular message, their away status clears automatically.
+    </p>
+
+    <h2>What Changed in the UI ✨</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feat-icon">🎤</div>
+        <div class="feat-title">Mic button</div>
+        <div class="feat-desc">New microphone button in the input bar for instant voice recording</div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">⌨️</div>
+        <div class="feat-title">Command menu</div>
+        <div class="feat-desc">Type / to see all commands with categories and descriptions</div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">📌</div>
+        <div class="feat-title">Room topic</div>
+        <div class="feat-desc">Topics display in the header on desktop, below it on mobile</div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">🛡️</div>
+        <div class="feat-title">Admin badge</div>
+        <div class="feat-desc">Admins get a gold nickname badge and red text in chat</div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">⏱️</div>
+        <div class="feat-title">Timed mutes</div>
+        <div class="feat-desc">/mute nick 5 silences someone for 5 minutes, auto-unmutes</div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">🏷️</div>
+        <div class="feat-title">Clear labels</div>
+        <div class="feat-desc">Header now shows "ROOM" and "YOU" labels so nothing is confusing</div>
+      </div>
+    </div>
+
+    <h2>Still zero-log. Still ephemeral. Still BurnChat.</h2>
+
+    <p>
+      Every feature in this update follows the same rule: <strong>nothing hits disk.</strong> Voice messages, private whispers, admin passwords, room topics, ban lists, mute timers — all of it lives exclusively in server memory. When the room burns, every byte is reclaimed by the garbage collector.
+    </p>
+
+    <p>
+      There's nothing to subpoena. Nothing to breach. Nothing to leak. The room existed, and then it didn't. That's still the entire point.
+    </p>
+
+    <p>
+      We're not done. There are more features coming — some of them pretty wild. Stay tuned.
+    </p>
+
+    <div class="cta-box">
+      <span class="emoji-big">🔥</span>
+      <h3>Try the new BurnChat</h3>
+      <p>Create a room. Type /help. Send a voice message. Burn it all.</p>
+      <a href="/" class="cta-btn">Open BurnChat</a>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <a href="/">burnchat.io</a> · <a href="/blog/">blog</a> · no logs · no database · no trace
+  </footer>
+
+  <button class="theme-toggle" onclick="(function(){var h=document.documentElement;h.classList.toggle('light');localStorage.setItem('burnchat-theme',h.classList.contains('light')?'light':'dark')})()">
+    <span class="icon-sun">☀</span>
+    <span class="icon-moon">☾</span>
+  </button>
+</body>
+</html>

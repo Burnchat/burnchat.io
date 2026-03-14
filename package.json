@@ -1,0 +1,13 @@
+{
+  "name": "burnchat",
+  "version": "2.3.1",
+  "description": "Ephemeral, zero-log chat rooms with burn-on-demand",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "socket.io": "^4.5.0"
+  }
+}

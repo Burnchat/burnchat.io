@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BurnChat Blog — Disposable Chat Rooms, Zero Logs</title>
+  <meta name="description" content="Learn how BurnChat works, why we store nothing, and how to create and burn chat rooms in seconds.">
+  <meta name="keywords" content="BurnChat blog, ephemeral chat, private messaging, zero logs, burn chat room, disposable chat">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BurnChat Blog — No Logs. No Traces. No Bullshit.">
+  <meta property="og:description" content="Learn how BurnChat works, why we store nothing, and how to create and burn chat rooms in seconds.">
+  <meta property="og:url" content="https://burnchat.io/blog/">
+  <meta property="og:site_name" content="BurnChat">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="BurnChat Blog">
+  <meta name="twitter:description" content="Everything about disposable chat rooms, zero-log architecture, and why the safest message is one that doesn't exist.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://burnchat.io/blog/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Theme detection — runs before CSS to prevent flash -->
+  <script>
+    (function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --accent-dim: #cc5529; --burn: #ff3d00; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    html.light { --bg: #f5f3f0; --surface: #fff; --border: #ddd; --text: #1a1a1a; --text-dim: #888; --accent: #e05a2b; }
+    .theme-toggle { position: fixed; bottom: 16px; right: 16px; z-index: 800; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-dim); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 2px 16px rgba(255,107,53,0.3); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: all 0.3s; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .blog-hero { max-width: 720px; margin: 0 auto; padding: 80px 32px 48px; }
+    .blog-hero h1 { font-family: var(--serif); font-size: 42px; font-weight: 700; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 16px; }
+    .blog-hero h1 span { color: var(--accent); }
+    .blog-hero p { color: var(--text-dim); font-size: 18px; line-height: 1.6; }
+    .divider { max-width: 720px; margin: 0 auto; padding: 0 32px; } .divider hr { border: none; border-top: 1px solid var(--border); }
+    .articles { max-width: 720px; margin: 0 auto; padding: 48px 32px 80px; }
+    .article-card { padding: 36px 0; border-bottom: 1px solid var(--border); animation: fadeUp 0.4s ease both; }
+    .article-card:last-child { border-bottom: none; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .article-card:nth-child(1) { animation-delay: 0.05s; } .article-card:nth-child(2) { animation-delay: 0.1s; } .article-card:nth-child(3) { animation-delay: 0.15s; } .article-card:nth-child(4) { animation-delay: 0.2s; } .article-card:nth-child(5) { animation-delay: 0.25s; }
+    .article-num { font-family: var(--mono); font-size: 48px; font-weight: 600; color: var(--border); line-height: 1; margin-bottom: 12px; }
+    .article-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: flex; gap: 16px; }
+    .article-tag { color: var(--accent); }
+    .article-card h2 { font-family: var(--serif); font-size: 26px; font-weight: 700; line-height: 1.25; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .article-card h2 a { color: var(--text); transition: color 0.15s; } .article-card h2 a:hover { color: var(--accent); text-decoration: none; }
+    .article-card p { color: var(--text-dim); font-size: 16px; line-height: 1.6; }
+    .read-more { display: inline-block; margin-top: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); } .read-more:hover { text-decoration: none; } .read-more::after { content: ' →'; }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    .site-footer a { color: var(--accent); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+    @media (max-width: 600px) { .blog-hero h1 { font-size: 30px; } .article-card h2 { font-size: 22px; } .blog-hero { padding: 48px 20px 32px; } .articles { padding: 32px 20px 60px; } .site-header { padding: 16px 20px; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links"><a href="/blog/">blog</a><a href="/">open app</a></nav>
+  </header>
+
+  <section class="blog-hero">
+    <h1>No logs. No traces. <span>No bullshit.</span></h1>
+    <p>Everything you need to know about BurnChat — how it works, why we built it, and why we don't store a single byte of your conversations.</p>
+  </section>
+
+  <div class="divider"><hr></div>
+
+  <section class="articles">
+
+    <article class="article-card">
+      <div class="article-num">01</div>
+      <div class="article-meta"><span class="article-tag">Major Update</span><span>5 min read</span></div>
+      <h2><a href="/blog/v27-voice-commands-admin">BurnChat v2.7 — Voice, Commands, and Room Control 🔥</a></h2>
+      <p>The biggest update yet. Voice messages that vanish, 20+ slash commands, admin system, private messaging, timed mutes, nickname changes, and a polished new chat UI. Everything still ephemeral. Everything still zero-log.</p>
+      <a href="/blog/v27-voice-commands-admin" class="read-more">Read article</a>
+    </article>
+
+
+
+    <article class="article-card">
+      <div class="article-num">02</div>
+      <div class="article-meta"><span class="article-tag">New Feature</span><span>2 min read</span></div>
+      <h2><a href="/blog/play-games-while-you-chat">Play games while you chat 🎮</a></h2>
+      <p>We just dropped multiplayer games inside BurnChat. First up: Snake. Play against anyone in your room — no downloads, no accounts, no leaving the conversation. More fun games coming soon.</p>
+      <a href="/blog/play-games-while-you-chat" class="read-more">Read article</a>
+    </article>
+
+    <article class="article-card">
+      <div class="article-num">03</div>
+      <div class="article-meta"><span class="article-tag">Security</span><span>5 min read</span></div>
+      <h2><a href="/blog/zero-logs-keep-you-safe">Why zero logs and a burn button keep you safe</a></h2>
+      <p>We don't store your messages in a database. We don't write them to disk. They live in server memory and nowhere else. Here's why that simple decision makes BurnChat fundamentally different from every other chat service.</p>
+      <a href="/blog/zero-logs-keep-you-safe" class="read-more">Read article</a>
+    </article>
+
+    <article class="article-card">
+      <div class="article-num">04</div>
+      <div class="article-meta"><span class="article-tag">Philosophy</span><span>4 min read</span></div>
+      <h2><a href="/blog/we-dont-care-why">We don't care why you need private chat. Just use it.</a></h2>
+      <p>No sign-up form asking for your email. No terms of service tracking your behavior. No analytics dashboard watching your clicks. We built BurnChat for one reason: some conversations shouldn't leave a trace. That's it.</p>
+      <a href="/blog/we-dont-care-why" class="read-more">Read article</a>
+    </article>
+
+    <article class="article-card">
+      <div class="article-num">05</div>
+      <div class="article-meta"><span class="article-tag">Guide</span><span>3 min read</span></div>
+      <h2><a href="/blog/how-it-works">Create a room in 2 seconds. Burn it in 1.</a></h2>
+      <p>A quick walkthrough of BurnChat — from creating a room and sharing the link to sending messages, images, locking rooms with passwords, and hitting the burn button when you're done.</p>
+      <a href="/blog/how-it-works" class="read-more">Read article</a>
+    </article>
+
+    <article class="article-card">
+      <div class="article-num">06</div>
+      <div class="article-meta"><span class="article-tag">Privacy</span><span>5 min read</span></div>
+      <h2><a href="/blog/privacy-is-not-a-feature">Privacy isn't a feature. It's our entire architecture.</a></h2>
+      <p>Most apps add privacy as a setting you toggle on. We built BurnChat so privacy isn't optional — it's physically impossible for us to access your conversations, because they don't exist anywhere we can reach.</p>
+      <a href="/blog/privacy-is-not-a-feature" class="read-more">Read article</a>
+    </article>
+
+    <article class="article-card">
+      <div class="article-num">07</div>
+      <div class="article-meta"><span class="article-tag">Technical</span><span>4 min read</span></div>
+      <h2><a href="/blog/what-happens-when-you-burn">What actually happens when you hit the burn button?</a></h2>
+      <p>No vague promises. No "we'll delete it within 30 days." Here's exactly what happens — at the code level — the instant someone presses burn. Spoiler: it takes less than 10 milliseconds.</p>
+      <a href="/blog/what-happens-when-you-burn" class="read-more">Read article</a>
+    </article>
+
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/">Create a room</a><a href="/blog/">Blog</a></div>
+    <p>BurnChat — No accounts. No logs. No traces.</p>
+  </footer>
+
+  <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+  <script>
+    
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle("light");localStorage.setItem("burnchat-theme",h.classList.contains("light")?"light":"dark")}
+  </script>
+</body>
+</html>

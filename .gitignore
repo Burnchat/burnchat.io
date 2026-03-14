@@ -1,0 +1,5 @@
+node_modules/
+.burnchat-stats.json
+package-lock.json
+*.log
+.env

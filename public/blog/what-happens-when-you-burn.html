@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Actually Happens When You Hit Burn — BurnChat</title>
+  <meta name="description" content="No vague promises. Here's exactly what happens at the code level when someone presses the burn button. It takes less than 10 milliseconds.">
+  <meta name="keywords" content="burn button chat, delete chat permanently, ephemeral messages how it works, RAM only messaging, destroy chat room instantly">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="What Actually Happens When You Hit the Burn Button?">
+  <meta property="og:description" content="Step by step, at the code level. No vague promises. It takes less than 10 milliseconds.">
+  <meta property="og:url" content="https://burnchat.io/blog/what-happens-when-you-burn">
+  <meta property="og:site_name" content="BurnChat">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="What Actually Happens When You Hit Burn?">
+  <meta name="twitter:description" content="Step by step, at the code level. Less than 10 milliseconds.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://burnchat.io/blog/what-happens-when-you-burn">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Theme detection — runs before CSS to prevent flash -->
+  <script>
+    (function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    html.light { --bg: #f5f3f0; --surface: #fff; --border: #ddd; --text: #1a1a1a; --text-dim: #888; --accent: #e05a2b; }
+    .theme-toggle { position: fixed; bottom: 16px; right: 16px; z-index: 800; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-dim); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 2px 16px rgba(255,107,53,0.3); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: all 0.3s; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+    .post-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; gap: 16px; }
+    .post-meta .tag { color: var(--accent); }
+    .post h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px; }
+    .post-intro { font-size: 20px; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .post h2 { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 44px 0 16px; line-height: 1.3; }
+    .post p { margin-bottom: 20px; } .post strong { color: #fff; }
+    .step { background: var(--surface); border-left: 3px solid var(--accent); padding: 20px 24px; margin: 24px 0; }
+    .step-num { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+    .step p { margin-bottom: 0; font-size: 16px; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; text-align: center; margin: 48px 0; }
+    .cta-box h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-dim); font-size: 16px; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; background: var(--accent); color: #fff; padding: 12px 28px; font-family: var(--mono); font-size: 14px; font-weight: 600; text-decoration: none; } .cta-btn:hover { background: #cc5529; text-decoration: none; }
+    .post-footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 48px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); display: flex; justify-content: space-between; }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); } .site-footer a { color: var(--accent); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+    @media (max-width: 600px) { .post h1 { font-size: 28px; } .post { padding: 40px 20px 60px; } .post-footer { flex-direction: column; gap: 8px; } }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "What Actually Happens When You Hit Burn",
+    "author": { "@type": "Organization", "name": "BurnChat" },
+    "publisher": { "@type": "Organization", "name": "BurnChat", "url": "https://burnchat.io" },
+    "url": "https://burnchat.io/blog/what-happens-when-you-burn",
+    "datePublished": "2026-03-11",
+    "dateModified": "2026-03-11"
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links"><a href="/blog/">blog</a><a href="/">open app</a></nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta"><span class="tag">Technical</span><span>4 min read</span></div>
+
+    <h1>What actually happens when you hit the burn button?</h1>
+
+    <p class="post-intro">Lots of apps say they "delete your data." Then you find out there's a 30-day grace period, a backup somewhere, a log that remembers. We're going to tell you exactly what BurnChat does when someone presses burn — step by step, no hand-waving.</p>
+
+    <p>Someone in the room hits the burn button. They get a confirmation popup — "Burn this room? All messages and images will be destroyed instantly and everyone will be disconnected." They confirm. Here's what happens next, in order, and it all takes less time than it took you to read this sentence.</p>
+
+    <div class="step">
+      <div class="step-num">Step 1 — Everyone gets notified</div>
+      <p>The server sends a "room-burned" signal to every connected user in the room. Their screens immediately switch to the burn confirmation page — a big fire emoji and the words "Room burned. All messages and images have been destroyed." Nobody gets to send one last message. It's instant.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 2 — Everyone gets disconnected</div>
+      <p>The server loops through every socket connection in the room and forcefully disconnects each one. Not a gentle "please close the connection" — a hard disconnect. The connection is severed from the server side. Nobody can send or receive anything from this room anymore because the connections no longer exist.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 3 — Timers get cancelled</div>
+      <p>Every room has two background timers: one for auto-cleanup (if everyone leaves) and one for the 24-hour hard expiration. Both get cancelled immediately. They're no longer needed because there won't be a room to clean up.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 4 — Messages get zeroed</div>
+      <p>The message array — every text message, every base64-encoded image — gets its length set to zero. This doesn't just mark things for later deletion. It removes every reference to every message object right now. The data is orphaned — nothing points to it anymore.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 5 — User list gets cleared</div>
+      <p>The map of connected users — their socket IDs and nicknames — gets wiped. There is now no record of who was in this room.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 6 — The room gets deleted</div>
+      <p>The room object itself gets removed from the server's room registry. The room ID — that random string in the URL — no longer maps to anything. If someone tries to visit that link now, they'll get a fresh empty room with no connection to what existed before.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">Step 7 — Garbage collection</div>
+      <p>This is the part that happens automatically. Once nothing references the message data, the user data, or the room object, JavaScript's garbage collector reclaims the memory. The bytes that held your conversation get overwritten by whatever the server needs that memory for next. This isn't something we trigger — it's just how memory management works. Unreferenced data gets recycled.</p>
+    </div>
+
+    <h2>How long does all of this take?</h2>
+
+    <p>Steps 1 through 6 happen in a single function call. We're talking single-digit milliseconds. Step 7 happens whenever the JavaScript engine decides to run garbage collection — usually within seconds, always within minutes. But it doesn't really matter when GC runs, because after step 6, there's already no way to access the data. It's dereferenced. It exists as meaningless bytes in unallocated memory, rapidly getting overwritten.</p>
+
+    <h2>Can the data be recovered?</h2>
+
+    <p>Short answer: no.</p>
+
+    <p>Longer answer: still no, and here's why. The messages were never written to disk. They lived exclusively in RAM. RAM is volatile memory — it only holds data while it's powered and actively referenced. Once the references are gone, the memory slots get reused almost immediately by other processes. There's no "recycle bin" for RAM. There's no journaling file system keeping track of what used to be there. The data isn't marked as deleted and waiting for someone clever to undelete it. It's overwritten with new data as fast as the CPU needs the space.</p>
+
+    <p>Compare this to a normal chat app where messages are stored in a database on a hard drive. Even after you "delete" a database record, the data often stays on disk until new data physically overwrites those sectors. With the right tools, deleted files and database records can be recovered for hours, days, or even weeks after deletion. That's how digital forensics works.</p>
+
+    <p>None of that applies here. There are no disk sectors to scan. There are no database records to undelete. There are no backups to restore. The conversation existed as electrical charges in silicon, those charges have been repurposed, and that's the end of it.</p>
+
+    <h2>What about our server's operating system?</h2>
+
+    <p>Fair question. Wouldn't the OS keep some trace of what happened? Not in our case. We disabled access logging on the web server. We disabled the system journal. The Node.js process doesn't write log files. There is no file on the server that records which rooms existed, when they were created, who connected, or what was said. The operating system has no more record of your conversation than it does of any other transient block of memory.</p>
+
+    <h2>What about screenshots?</h2>
+
+    <p>We can't prevent screenshots. Nobody can — it's a fundamental limitation of displaying information on a screen. If someone in the room takes a screenshot, that exists on their device and there's nothing our server can do about it. Some apps try to detect or block screenshots, but those are trivially bypassed with a second phone or a camera.</p>
+
+    <p>We're honest about this. BurnChat guarantees that <em>we</em> don't keep your data. We can't guarantee that every person in the room is trustworthy. That part's on you — which is why you should only share the room link with people you actually want to talk to.</p>
+
+    <h2>That's the whole process</h2>
+
+    <p>Button, confirm, wipe, disconnect, delete, garbage collect. Less than a second for the parts that matter. No databases to purge, no backups to shred, no cache to invalidate, no CDN to flush, no third-party analytics to send deletion requests to. Just clear the memory and move on.</p>
+
+    <p>We built it this way because we think "delete" should mean delete. Not "delete, but actually we keep it for 30 days." Not "delete, but it's still in our backup from last Tuesday." Not "delete, but our analytics partner has a copy." Delete. Gone. Empty. Done.</p>
+
+    <div class="cta-box">
+      <h3>See it for yourself</h3>
+      <p>Create a room. Send something. Burn it. Then try to find any evidence it ever existed.</p>
+      <a href="/" class="cta-btn">Create a room</a>
+    </div>
+
+    <div class="post-footer">
+      <a href="/blog/privacy-is-not-a-feature">← Previous: Privacy isn't a feature</a>
+      <a href="/blog/">All articles →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/">Create a room</a><a href="/blog/">Blog</a></div>
+    <p>BurnChat — No accounts. No logs. No traces.</p>
+  </footer>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+  <script>
+    
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle("light");localStorage.setItem("burnchat-theme",h.classList.contains("light")?"light":"dark")}
+  </script>
+</body>
+</html>

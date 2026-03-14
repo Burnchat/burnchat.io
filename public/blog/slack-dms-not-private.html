@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Slack DMs Aren't Private — BurnChat Blog</title>
+  <meta name="description" content="Slack retains all messages indefinitely on paid plans. Employers can export every DM, even deleted ones. Here's what workplace chat actually stores about you.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111; --border: #222;
+      --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35;
+      --mono: 'IBM Plex Mono', monospace;
+      --serif: 'Source Serif 4', Georgia, serif;
+    }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--serif); font-size: 18px; line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .site-header {
+      padding: 24px 32px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--accent); }
+    .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; }
+    .nav-links a { color: var(--text-dim); }
+    .nav-links a:hover { color: var(--accent); text-decoration: none; }
+
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+
+    .post-meta {
+      font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;
+      display: flex; gap: 16px;
+    }
+    .post-meta .tag { color: var(--accent); }
+
+    .post h1 {
+      font-family: var(--serif); font-size: 38px; font-weight: 700;
+      line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px;
+    }
+
+    .post-intro {
+      font-size: 20px; color: var(--text-dim); line-height: 1.6;
+      margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border);
+    }
+
+    .post h2 {
+      font-family: var(--serif); font-size: 26px; font-weight: 700;
+      margin: 48px 0 16px; line-height: 1.3;
+    }
+
+    .post p { margin-bottom: 20px; }
+
+    .post strong { color: #fff; }
+
+    .highlight-box {
+      background: var(--surface); border-left: 3px solid var(--accent);
+      padding: 20px 24px; margin: 32px 0; font-size: 16px;
+    }
+
+    .highlight-box p { margin-bottom: 0; }
+
+    .stat-callout {
+      font-family: var(--mono); font-size: 48px; font-weight: 600;
+      color: var(--accent); text-align: center; padding: 32px 0;
+      line-height: 1.2;
+    }
+
+    .stat-callout small {
+      display: block; font-size: 14px; color: var(--text-dim);
+      font-weight: 400; margin-top: 8px; letter-spacing: 0.5px;
+    }
+
+    .post ul {
+      margin: 16px 0 20px 24px;
+      list-style: none;
+    }
+
+    .post ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 10px;
+    }
+
+    .post ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    .cta-box {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 32px; text-align: center; margin: 48px 0;
+    }
+
+    .cta-box h3 {
+      font-family: var(--serif); font-size: 22px; margin-bottom: 12px;
+    }
+
+    .cta-box p { color: var(--text-dim); font-size: 16px; margin-bottom: 16px; }
+
+    .cta-btn {
+      display: inline-block; background: var(--accent); color: #fff;
+      padding: 12px 28px; font-family: var(--mono); font-size: 14px;
+      font-weight: 600; text-decoration: none;
+    }
+
+    .cta-btn:hover { background: #cc5529; text-decoration: none; }
+
+    .post-footer {
+      border-top: 1px solid var(--border); padding-top: 32px; margin-top: 48px;
+      font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+      display: flex; justify-content: space-between;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border); padding: 32px;
+      text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    }
+    .site-footer a { color: var(--accent); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+
+    @media (max-width: 600px) {
+      .post h1 { font-size: 28px; }
+      .post { padding: 40px 20px 60px; }
+      .stat-callout { font-size: 36px; }
+      .post-footer { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links">
+      <a href="/blog/">blog</a>
+      <a href="/">open app</a>
+    </nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta">
+      <span class="tag">Workplace Privacy</span>
+      <span>8 min read</span>
+    </div>
+
+    <h1>Your Slack DMs aren't private. Your boss can read every one of them.</h1>
+
+    <p class="post-intro">You type something snarky about a meeting in a Slack DM. You vent about your manager. You share a salary number with a trusted colleague. You assume it's private — two people, a locked channel. It isn't. Not even close.</p>
+
+    <p>Most people treat Slack like texting. It feels casual, fleeting, even intimate in DMs. But Slack isn't a messaging app between friends. It's an <strong>enterprise surveillance platform</strong> that your company pays for and controls. Every word you type belongs to them — legally, technically, and permanently.</p>
+
+    <p>Here's what actually happens to your messages, and why it should change how you think about workplace chat forever.</p>
+
+    <h2>Everything is retained. Everything.</h2>
+
+    <p>On Slack's paid plans — which virtually every workplace uses — <strong>all messages are retained indefinitely</strong> by default. Not just channel messages. DMs. Group DMs. Threads. Edited messages (including the original, pre-edit version). Deleted messages. Files. Reactions. Everything.</p>
+
+    <p>On Slack's Business+ and Enterprise Grid plans, workspace owners can export this data at will — including private channels and DMs — using a self-serve tool. No IT ticket. No notification to you. No consent required.</p>
+
+    <div class="highlight-box">
+      <p><strong>Think deleting a message protects you?</strong> Slack's compliance exports include deleted messages. The "delete" button is cosmetic — it hides the message from the interface but keeps it in the data layer, available to admins and compliance teams.</p>
+    </div>
+
+    <p>And it's not just Slack. <strong>Microsoft Teams</strong> stores compliance copies of every message — including deleted and edited versions — in Exchange Online mailboxes. Administrators can search through everything using Microsoft Purview eDiscovery. The "deleted" message you thought was gone? Teams keeps a copy in a hidden folder called SubstrateHolds, invisible to you but fully accessible to compliance.</p>
+
+    <h2>Your DMs are discoverable in court</h2>
+
+    <p>Workplace chat messages are considered business records. In litigation, they're subject to the same discovery obligations as emails, contracts, and financial records. Lawyers can — and regularly do — subpoena entire Slack workspaces.</p>
+
+    <p>This isn't hypothetical. In the <strong>Epic v. Google antitrust case</strong>, a federal judge sanctioned Google after discovering that employees had been using Google Chat's "history off" feature to avoid creating discoverable records. The court found this constituted deliberate spoliation of evidence. The jury — perhaps influenced by the implication that Google was hiding something — returned a verdict in under four hours.</p>
+
+    <p>The lesson isn't that Google used ephemeral messaging. It's that they used a tool that <em>pretended</em> to be ephemeral while actually operating within a system designed to retain everything. Half-measures are worse than no measures at all.</p>
+
+    <div class="stat-callout">
+      1 in 17
+      <small>Slack messages contain sensitive data like PII, credentials, or PHI</small>
+    </div>
+
+    <h2>Discord is even worse than you think</h2>
+
+    <p>If your team uses Discord for casual communication, the privacy situation is grimmer still. Discord routes user interactions through tracking endpoints regardless of any privacy settings you configure. Files uploaded to Discord persist on its CDN servers even after you delete your account. And Discord's privacy policy explicitly allows data retention for legal compliance, safety, and "other legitimate business purposes" — a category so broad it covers essentially everything.</p>
+
+    <p>Unlike Slack, Discord wasn't built for enterprise use. It was built for gaming communities and retrofitted for broader communication. Its data architecture reflects that origin: minimal user control, maximal platform access.</p>
+
+    <h2>WhatsApp: encrypted but not private</h2>
+
+    <p>Some teams migrate sensitive conversations to WhatsApp, believing end-to-end encryption provides protection. It provides <em>some</em> protection — against eavesdropping in transit. But WhatsApp collects extensive metadata: your contacts, message frequency and timing, device information, IP addresses, and more. This metadata is shared with Meta and used for advertising purposes.</p>
+
+    <p>More concerning: WhatsApp can activate enhanced metadata tracking for specific users, including a feature known as "prospective message pairs" that logs who you communicate with, when, and how often. The content of your messages may be encrypted, but <strong>the pattern of your communications</strong> — which in many contexts reveals more than content — is not.</p>
+
+    <h2>The real problem: data that exists can be breached</h2>
+
+    <p>Every message stored is a message that can be leaked, breached, subpoenaed, or weaponized. This isn't theoretical risk — it's documented reality:</p>
+
+    <ul>
+      <li><strong>Disney (July 2024)</strong>: Hacktivists exfiltrated 1.1 terabytes from internal Slack channels — 44 million messages, unreleased project details, credentials, and employee passport numbers. Disney subsequently announced it would stop using Slack entirely.</li>
+      <li><strong>Nikkei (September 2025)</strong>: A single stolen employee credential exposed the chat histories of 17,368 users.</li>
+      <li><strong>Twitter v. Musk (2022)</strong>: Hundreds of private text messages between billionaires — including a $1 billion investment commitment — were unsealed as public court exhibits.</li>
+    </ul>
+
+    <p>The average cost of a data breach reached <strong>$4.88 million globally</strong> in 2024. In the United States, that number was $10.22 million. And the reputational damage — the thing that actually keeps executives up at night — is unquantifiable.</p>
+
+    <h2>What ephemeral actually means</h2>
+
+    <p>"Ephemeral messaging" has become a buzzword diluted to meaninglessness. Slack's message deletion isn't ephemeral — it's cosmetic. WhatsApp's disappearing messages aren't ephemeral — they can be screenshotted, backed up to cloud, or captured by MDM software. Even Signal's disappearing messages aren't truly ephemeral — they live on the device until the timer expires, and any participant can screenshot them.</p>
+
+    <p><strong>True ephemeral communication</strong> means messages exist only in volatile memory (RAM), are never written to disk, and can be destroyed instantly and irrecoverably by any participant. When the room closes, the JavaScript garbage collector reclaims the memory. There's nothing to subpoena, nothing to breach, nothing to recover.</p>
+
+    <p>That's not a feature. That's an architecture.</p>
+
+    <div class="cta-box">
+      <h3>Try a conversation that actually disappears</h3>
+      <p>No accounts. No logs. No traces. Messages exist only in memory.<br>Hit burn and everything is destroyed forever.</p>
+      <a href="/" class="cta-btn">Create a room</a>
+    </div>
+
+    <h2>What should you actually do?</h2>
+
+    <p>This isn't about paranoia. It's about appropriate caution with a technology that most people fundamentally misunderstand. Here's the framework:</p>
+
+    <p><strong>Use Slack for what it's designed for</strong> — project coordination, team announcements, non-sensitive collaboration. Treat every Slack message as a potential exhibit in a lawsuit, because legally, that's exactly what it is.</p>
+
+    <p><strong>Move sensitive conversations off retained platforms entirely.</strong> Salary discussions, HR concerns, strategy debates, candid feedback — none of this belongs in a system that retains everything indefinitely and grants your employer full access.</p>
+
+    <p><strong>Understand that "deleting" isn't deleting.</strong> On Slack, Teams, Discord, and most enterprise chat platforms, the delete button is a UI feature, not a data operation. The message is hidden from your view but preserved in the backend.</p>
+
+    <p>The safest message isn't an encrypted message, a deleted message, or a disappearing message. It's a message that was never stored in the first place.</p>
+
+    <div class="post-footer">
+      <a href="/blog/">← Back to all articles</a>
+      <a href="/blog/disney-slack-breach">Next: Disney's 44 million message breach →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="/">Create a room</a>
+      <a href="/blog/">Blog</a>
+    </div>
+    <p>BurnChat — No accounts. No logs. No traces.</p>
+  </footer>
+
+</body>
+</html>

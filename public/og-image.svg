@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0d0d0d"/>
+  <text x="600" y="260" text-anchor="middle" font-family="monospace" font-size="72" font-weight="700" fill="#e0e0e0">burn<tspan fill="#ff6b35">chat</tspan></text>
+  <text x="600" y="340" text-anchor="middle" font-family="monospace" font-size="28" fill="#666">Disposable chat rooms.</text>
+  <text x="600" y="390" text-anchor="middle" font-family="monospace" font-size="22" fill="#444">No accounts. No logs. No traces.</text>
+  <text x="600" y="480" text-anchor="middle" font-family="monospace" font-size="18" fill="#ff6b35">burnchat.io</text>
+</svg>

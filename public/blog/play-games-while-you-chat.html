@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Games While You Chat — Multiplayer Snake is Here — BurnChat</title>
+  <meta name="description" content="BurnChat now has built-in multiplayer games. Play Snake with anyone in your chat room — no downloads, no accounts, just tap and play.">
+  <meta name="keywords" content="multiplayer snake game, online chat games, play games in chat, burnchat games, browser multiplayer game, ephemeral chat games">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Play Games While You Chat — Multiplayer Snake is Here">
+  <meta property="og:description" content="We added multiplayer games to BurnChat. First up: Snake. Play with anyone in your room. No downloads, no accounts.">
+  <meta property="og:url" content="https://burnchat.io/blog/play-games-while-you-chat">
+  <meta property="og:site_name" content="BurnChat">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Play Games While You Chat — Multiplayer Snake is Here">
+  <meta name="twitter:description" content="Multiplayer Snake inside BurnChat. Play with anyone in your room. No downloads, no accounts.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://burnchat.io/blog/play-games-while-you-chat">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    (function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    html.light { --bg: #f5f3f0; --surface: #fff; --border: #ddd; --text: #1a1a1a; --text-dim: #888; --accent: #e05a2b; }
+    .theme-toggle { position: fixed; bottom: 16px; right: 16px; z-index: 800; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-dim); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 2px 16px rgba(255,107,53,0.3); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: all 0.3s; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+    .post-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; gap: 16px; }
+    .post-meta .tag { color: var(--accent); }
+    .post h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px; }
+    .post-intro { font-size: 20px; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .post h2 { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 44px 0 16px; line-height: 1.3; }
+    .post p { margin-bottom: 20px; } .post strong { color: #fff; }
+    html.light .post strong { color: #000; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; text-align: center; margin: 48px 0; border-radius: 4px; }
+    .cta-box h3 { font-family: var(--mono); font-size: 16px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-dim); font-size: 15px; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; padding: 12px 32px; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 14px; font-weight: 600; border-radius: 4px; text-decoration: none; } .cta-btn:hover { text-decoration: none; filter: brightness(1.15); }
+    .emoji-big { font-size: 48px; margin-bottom: 16px; display: block; }
+    .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin: 32px 0; }
+    .how-step { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 4px; text-align: center; }
+    .how-step .step-num { font-family: var(--mono); font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+    .how-step .step-icon { font-size: 28px; margin-bottom: 8px; }
+    .how-step .step-text { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
+    .game-features { list-style: none; margin: 24px 0; }
+    .game-features li { padding: 8px 0; padding-left: 28px; position: relative; font-size: 16px; color: var(--text-dim); }
+    .game-features li::before { content: '🔥'; position: absolute; left: 0; }
+    .footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    .footer a { color: var(--text-dim); } .footer a:hover { color: var(--accent); }
+    @media (max-width: 600px) {
+      .post h1 { font-size: 28px; }
+      .post { padding: 40px 20px 60px; }
+      .site-header { padding: 16px 20px; }
+      .nav-links { gap: 16px; font-size: 12px; }
+      .how-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links">
+      <a href="/blog/">blog</a>
+      <a href="/">open app</a>
+    </nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta">
+      <span class="tag">New Feature</span>
+      <span>March 2026</span>
+      <span>2 min read</span>
+    </div>
+
+    <h1>Play Games While You Chat 🎮</h1>
+
+    <p class="post-intro">
+      We just dropped something fun inside BurnChat — multiplayer games you can play right inside your chat room. No downloads. No accounts. No leaving the conversation. Just tap and play.
+    </p>
+
+    <h2>First up: Multiplayer Snake 🐍</h2>
+
+    <p>
+      Classic Snake — but multiplayer. You're playing against everyone in your chat room. Your snake gets a unique color, food spawns on the board, and whoever eats the most wins. It's simple, it's fast, and it's surprisingly competitive.
+    </p>
+
+    <p>
+      The game plays <strong>right inside your chat window</strong>. No popups, no new tabs, no leaving the conversation. The snakes move over your messages. When you're done, hit END and you're back to chatting.
+    </p>
+
+    <h2>How It Works</h2>
+
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="step-num">Step 1</div>
+        <div class="step-icon">🎮</div>
+        <div class="step-text">Tap the joystick icon in the chat header</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">Step 2</div>
+        <div class="step-icon">🐍</div>
+        <div class="step-text">Pick Snake from the game menu</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">Step 3</div>
+        <div class="step-icon">▶️</div>
+        <div class="step-text">Hit GO — your snake appears on screen</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">Step 4</div>
+        <div class="step-icon">⌨️</div>
+        <div class="step-text">Arrow keys, WASD, or swipe to move</div>
+      </div>
+    </div>
+
+    <p>
+      When someone else in the room starts playing, the game restarts fresh so everyone starts on equal ground. The leaderboard tracks scores in real-time.
+    </p>
+
+    <h2>What makes it different</h2>
+
+    <ul class="game-features">
+      <li>Plays inside the chat — no new window, no new tab</li>
+      <li>Real-time multiplayer over WebSocket — smooth and fast</li>
+      <li>Works on desktop and mobile — keyboard or swipe</li>
+      <li>Each player gets a unique color</li>
+      <li>No accounts needed — same as BurnChat itself</li>
+      <li>Game runs as long as you want — no time limits</li>
+      <li>Live leaderboard showing scores</li>
+      <li>When you leave the room, the game disappears — just like your messages</li>
+    </ul>
+
+    <h2>Still private. Still ephemeral.</h2>
+
+    <p>
+      This is BurnChat, so you already know the deal. <strong>Nothing is stored.</strong> Your game sessions don't get saved. Your scores don't persist. When the last player leaves or the room burns, it all vanishes — the chat, the game, everything.
+    </p>
+
+    <p>
+      We built this because chat rooms should be fun. Sometimes you're waiting for someone, sometimes the conversation hits a lull, sometimes you just want to race a snake against a stranger. Now you can.
+    </p>
+
+    <h2>More games are coming 🎮</h2>
+
+    <p>
+      Snake is just the first drop. That 🎮 button is a game menu — and we're filling it up. We're building more fun multiplayer games that you can play right inside your chat room with anyone who's there.
+    </p>
+
+    <p>
+      Think quick rounds, easy to pick up, no installs, no sign-ups — just tap and play with the people you're already chatting with. Puzzle games, reaction games, strategy games — all designed to work inside BurnChat's ephemeral rooms.
+    </p>
+
+    <p>
+      Every game we add will follow the same rules: <strong>no accounts, no history, no data.</strong> When the room burns, the games burn with it. We're not building a gaming platform — we're making chat rooms more fun.
+    </p>
+
+    <p>
+      Stay tuned. The 🎮 menu is about to get a lot more interesting.
+    </p>
+
+    <p>
+      Got a game idea you'd love to see? Jump into a room and tell us.
+    </p>
+
+    <div class="cta-box">
+      <span class="emoji-big">🎮</span>
+      <h3>Try Snake now — more games dropping soon</h3>
+      <p>Create a room, invite a friend, and tap the 🎮 button.</p>
+      <a href="/" class="cta-btn">Open BurnChat</a>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <a href="/">burnchat.io</a> · <a href="/blog/">blog</a> · no logs · no database · no trace
+  </footer>
+
+  <button class="theme-toggle" onclick="(function(){var h=document.documentElement;h.classList.toggle('light');localStorage.setItem('burnchat-theme',h.classList.contains('light')?'light':'dark')})()">
+    <span class="icon-sun">☀</span>
+    <span class="icon-moon">☾</span>
+  </button>
+</body>
+</html>

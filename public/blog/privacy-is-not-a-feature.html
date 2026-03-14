@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Isn't a Feature. It's Our Entire Architecture. — BurnChat</title>
+  <meta name="description" content="Most apps bolt privacy on as an option. BurnChat is built so we physically can't access your conversations. There's nothing to toggle on.">
+  <meta name="keywords" content="privacy architecture, private by design, zero knowledge chat, no data chat, privacy not a feature, anonymous messaging">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Privacy Isn't a Feature. It's Our Entire Architecture.">
+  <meta property="og:description" content="Most apps add privacy as a toggle. We built BurnChat so it's physically impossible for us to access your conversations.">
+  <meta property="og:url" content="https://burnchat.io/blog/privacy-is-not-a-feature">
+  <meta property="og:site_name" content="BurnChat">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Privacy Isn't a Feature. It's Our Entire Architecture.">
+  <meta name="twitter:description" content="We can't read your conversations. Not because of a policy. Because of how it's built.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://burnchat.io/blog/privacy-is-not-a-feature">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Theme detection — runs before CSS to prevent flash -->
+  <script>
+    (function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    html.light { --bg: #f5f3f0; --surface: #fff; --border: #ddd; --text: #1a1a1a; --text-dim: #888; --accent: #e05a2b; }
+    .theme-toggle { position: fixed; bottom: 16px; right: 16px; z-index: 800; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-dim); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 2px 16px rgba(255,107,53,0.3); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: all 0.3s; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+    .post-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; gap: 16px; }
+    .post-meta .tag { color: var(--accent); }
+    .post h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px; }
+    .post-intro { font-size: 20px; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .post h2 { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 44px 0 16px; line-height: 1.3; }
+    .post p { margin-bottom: 20px; } .post strong { color: #fff; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; text-align: center; margin: 48px 0; }
+    .cta-box h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-dim); font-size: 16px; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; background: var(--accent); color: #fff; padding: 12px 28px; font-family: var(--mono); font-size: 14px; font-weight: 600; text-decoration: none; } .cta-btn:hover { background: #cc5529; text-decoration: none; }
+    .post-footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 48px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); display: flex; justify-content: space-between; }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); } .site-footer a { color: var(--accent); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+    @media (max-width: 600px) { .post h1 { font-size: 28px; } .post { padding: 40px 20px 60px; } .post-footer { flex-direction: column; gap: 8px; } }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Privacy Isn't a Feature. It's Our Entire Architecture.",
+    "author": { "@type": "Organization", "name": "BurnChat" },
+    "publisher": { "@type": "Organization", "name": "BurnChat", "url": "https://burnchat.io" },
+    "url": "https://burnchat.io/blog/privacy-is-not-a-feature",
+    "datePublished": "2026-03-11",
+    "dateModified": "2026-03-11"
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links"><a href="/blog/">blog</a><a href="/">open app</a></nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta"><span class="tag">Privacy</span><span>5 min read</span></div>
+
+    <h1>Privacy isn't a feature. It's our entire architecture.</h1>
+
+    <p class="post-intro">WhatsApp has a privacy setting. Telegram has a "secret chat" mode. Signal has disappearing messages. These are all features — things you toggle on, things you can forget to enable, things that can break or be bypassed. BurnChat doesn't have a privacy feature. The whole thing <em>is</em> the privacy.</p>
+
+    <p>There's a huge difference between a chat app that <em>chooses</em> not to read your messages and a chat app that <em>can't</em> read your messages. The first one is making you a promise. The second one is telling you a fact about how it's built.</p>
+
+    <p>We're the second one.</p>
+
+    <h2>The "privacy toggle" problem</h2>
+
+    <p>Open WhatsApp right now. Go to a conversation. How many of your chats have disappearing messages turned on? Probably not many, if any. It's buried in settings, it's per-conversation, and it defaults to off. Which means by default, WhatsApp keeps everything forever.</p>
+
+    <p>Same deal with Telegram. You have to specifically start a "Secret Chat" to get end-to-end encryption. Regular chats? Stored on Telegram's servers, readable by Telegram, tied to your phone number. Most people don't know the difference, so most people are using the non-private version without realizing it.</p>
+
+    <p>Even Signal, which is genuinely good at encryption, still requires a phone number to sign up. Your identity is baked in from the start. And disappearing messages need to be turned on manually for each conversation. Forget once, and that conversation lives on every device it touched.</p>
+
+    <p>All of these apps can be made more private if you know what buttons to press. But the default is not private. You have to opt into privacy, and most people never do.</p>
+
+    <h2>What "architecture-level privacy" looks like</h2>
+
+    <p>BurnChat works differently. There is no privacy toggle because there's nothing to toggle. The way the thing is built means your conversations are private whether you think about it or not.</p>
+
+    <p>Here's the short version of what's going on under the hood:</p>
+
+    <p><strong>No accounts.</strong> You don't create a login. You don't give us an email or phone number. You pick a nickname when you enter a room and that nickname exists only in the server's memory until the room is gone. There's no user profile, no account database, no identity linking one session to another.</p>
+
+    <p><strong>No message storage.</strong> Messages are held in the server's RAM — the same temporary memory that gets wiped when a process ends. There's no database behind this. No MySQL, no MongoDB, no Redis, no file on disk. When the room closes, the memory is freed and the messages are gone in the same way a spoken word is gone once the sound fades.</p>
+
+    <p><strong>No request logging.</strong> The web server doesn't keep access logs. The application doesn't log requests. The system journal is pointed at /dev/null. There's no file anywhere on our server that records who visited, when, or what they did.</p>
+
+    <p><strong>No analytics.</strong> We don't run Google Analytics. We don't run Mixpanel, Amplitude, Hotjar, or any tracking tool. We don't set cookies. We don't fingerprint browsers. We have no idea how many people used BurnChat today and we have no mechanism to find out.</p>
+
+    <h2>Why this matters more than encryption</h2>
+
+    <p>Encryption gets all the attention in privacy conversations, and it matters — don't get us wrong. But encryption only protects messages in transit. Once a message arrives and gets stored, encryption just means the data sitting on someone's server is scrambled. The company that owns the server usually has the keys to unscramble it. And even if they don't, the data is still <em>there</em> — waiting to be accessed if the keys are ever compromised, compelled by a court order, or leaked by an employee.</p>
+
+    <p>Our approach is simpler: there's nothing to encrypt because there's nothing stored. You can't decrypt data that doesn't exist. You can't subpoena a conversation that's been freed from RAM. You can't leak a database that was never created.</p>
+
+    <p>Is BurnChat encrypted in transit? Yeah, it runs over HTTPS. But the real protection isn't the encryption. It's the absence. The messages aren't somewhere safe — they're nowhere.</p>
+
+    <h2>Trust us? You don't have to.</h2>
+
+    <p>The best privacy systems are the ones that don't ask you to trust anyone. We could tell you all day that we don't peek at messages, that we don't sell data, that we care deeply about your privacy. And maybe that's true. But it doesn't matter, because the system is designed so that even if we wanted to do those things, we couldn't.</p>
+
+    <p>There's no admin panel that lets us read room contents. There's no way for us to recover a burned room. The architecture makes betrayal technically impossible, which is a much stronger guarantee than a privacy policy that makes betrayal merely against the rules.</p>
+
+    <p>Rules change. Code doesn't lie.</p>
+
+    <div class="cta-box">
+      <h3>Privacy by default</h3>
+      <p>No settings to configure. No options to enable. It just works.</p>
+      <a href="/" class="cta-btn">Create a room</a>
+    </div>
+
+    <div class="post-footer">
+      <a href="/blog/how-it-works">← Previous: How it works</a>
+      <a href="/blog/what-happens-when-you-burn">Next: What happens when you burn →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/">Create a room</a><a href="/blog/">Blog</a></div>
+    <p>BurnChat — No accounts. No logs. No traces.</p>
+  </footer>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+  <script>
+    
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle("light");localStorage.setItem("burnchat-theme",h.classList.contains("light")?"light":"dark")}
+  </script>
+</body>
+</html>

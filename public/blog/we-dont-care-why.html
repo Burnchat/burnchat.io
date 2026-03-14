@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>We Don't Care Why You Need Private Chat — BurnChat</title>
+  <meta name="description" content="No sign-up. No questions. No judgment. BurnChat exists for people who want a conversation that disappears. That's all we need to know.">
+  <meta name="keywords" content="anonymous chat, private chat no sign up, no account chat, hidden chat room, secret chat, disposable messaging">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="We Don't Care Why You Need Private Chat. Just Use It.">
+  <meta property="og:description" content="No sign-up form. No terms of service tracking you. Some conversations shouldn't leave a trace.">
+  <meta property="og:url" content="https://burnchat.io/blog/we-dont-care-why">
+  <meta property="og:site_name" content="BurnChat">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="We Don't Care Why You Need Private Chat">
+  <meta name="twitter:description" content="No sign-up. No questions. No judgment. Just use it.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="canonical" href="https://burnchat.io/blog/we-dont-care-why">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Theme detection — runs before CSS to prevent flash -->
+  <script>
+    (function(){var s=localStorage.getItem("burnchat-theme");if(s==="light"||((!s)&&new Date().getHours()>=7&&new Date().getHours()<19))document.documentElement.classList.add("light")})();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #d4d4d4; --text-dim: #666; --accent: #ff6b35; --mono: 'IBM Plex Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; }
+    html.light { --bg: #f5f3f0; --surface: #fff; --border: #ddd; --text: #1a1a1a; --text-dim: #888; --accent: #e05a2b; }
+    .theme-toggle { position: fixed; bottom: 16px; right: 16px; z-index: 800; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--text-dim); background: var(--surface); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+    .theme-toggle:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 2px 16px rgba(255,107,53,0.3); }
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: all 0.3s; }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+    html.light .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 18px; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .site-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--mono); font-size: 20px; font-weight: 600; color: var(--text); text-decoration: none; } .logo span { color: var(--accent); } .logo:hover { text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; font-family: var(--mono); font-size: 13px; } .nav-links a { color: var(--text-dim); } .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .post { max-width: 680px; margin: 0 auto; padding: 64px 32px 80px; }
+    .post-meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; gap: 16px; }
+    .post-meta .tag { color: var(--accent); }
+    .post h1 { font-family: var(--serif); font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 24px; }
+    .post-intro { font-size: 20px; color: var(--text-dim); line-height: 1.6; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+    .post h2 { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 44px 0 16px; line-height: 1.3; }
+    .post p { margin-bottom: 20px; } .post strong { color: #fff; }
+    .cta-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; text-align: center; margin: 48px 0; }
+    .cta-box h3 { font-family: var(--serif); font-size: 22px; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-dim); font-size: 16px; margin-bottom: 16px; }
+    .cta-btn { display: inline-block; background: var(--accent); color: #fff; padding: 12px 28px; font-family: var(--mono); font-size: 14px; font-weight: 600; text-decoration: none; } .cta-btn:hover { background: #cc5529; text-decoration: none; }
+    .post-footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 48px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); display: flex; justify-content: space-between; }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-dim); } .site-footer a { color: var(--accent); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+    @media (max-width: 600px) { .post h1 { font-size: 28px; } .post { padding: 40px 20px 60px; } .post-footer { flex-direction: column; gap: 8px; } }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "We Don't Care Why You Need Private Chat",
+    "author": { "@type": "Organization", "name": "BurnChat" },
+    "publisher": { "@type": "Organization", "name": "BurnChat", "url": "https://burnchat.io" },
+    "url": "https://burnchat.io/blog/we-dont-care-why",
+    "datePublished": "2026-03-11",
+    "dateModified": "2026-03-11"
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="logo">burn<span>chat</span></a>
+    <nav class="nav-links"><a href="/blog/">blog</a><a href="/">open app</a></nav>
+  </header>
+
+  <article class="post">
+    <div class="post-meta"><span class="tag">Philosophy</span><span>4 min read</span></div>
+
+    <h1>We don't care why you need private chat. Just use it.</h1>
+
+    <p class="post-intro">Every privacy tool out there feels the need to justify itself. "For journalists protecting sources." "For businesses handling sensitive data." "For activists in oppressive regimes." That's fine. But we're not going to do that.</p>
+
+    <p>You want a chat room that disappears? Here. Go. We don't need to know why.</p>
+
+    <p>Maybe you're planning a surprise birthday party and you don't want it showing up in your WhatsApp history. Maybe you're talking to a lawyer about something personal. Maybe you're venting about your day and you just don't want that conversation sitting on some company's server until the heat death of the universe. Maybe it's none of the above and you just like the idea that when a conversation is over, it's actually over.</p>
+
+    <p>All of those are fine. All of them. And you don't owe us an explanation for any of them.</p>
+
+    <h2>We didn't build a sign-up form because we don't want your information</h2>
+
+    <p>Think about what happens when you sign up for a chat app. You hand over your email, maybe your phone number. You agree to terms that let the company use your data in ways you'll never read about because the document is 9,000 words long. You create a profile that links your identity to everything you say from that point forward.</p>
+
+    <p>We skipped all of that. Open the site, click a button, you're in a room. Pick a nickname — any nickname, we're not checking. Share the link with whoever you want to talk to. That's the whole process.</p>
+
+    <p>We don't have your email. We don't have your phone number. We don't even have your IP address in a log file because we turned logging off. You're just a nickname in a room that will stop existing soon.</p>
+
+    <h2>Privacy shouldn't require a reason</h2>
+
+    <p>There's this weird thing that happens in conversations about privacy where people feel like they need to prove they deserve it. "I have nothing to hide, but..." — you don't need the "but." You don't need to justify wanting a conversation to stay between you and the people you're talking to.</p>
+
+    <p>You close the bathroom door even when nobody else is home. You don't carbon-copy your entire contact list on every email. You have conversations in person that you wouldn't repeat on a stage. That's not suspicious. That's being a normal person.</p>
+
+    <p>BurnChat is the digital version of talking in a room and then walking out. The room doesn't record you. The walls don't have memory. You said what you said, and then it's gone.</p>
+
+    <h2>What we actually see from our end</h2>
+
+    <p>Nothing. Seriously.</p>
+
+    <p>We don't have an admin panel where we can peek into rooms. We don't have analytics tracking how many messages get sent. We don't have a dashboard showing us what people are talking about. We literally cannot read your conversations, not because of some policy we pinky-promise to follow, but because the server doesn't save them anywhere we could access.</p>
+
+    <p>The messages exist in the server's temporary memory while the room is active. When the room is gone, the memory is recycled. There's no "check the backup" option. There's no backup.</p>
+
+    <h2>Use it for whatever</h2>
+
+    <p>Coordinate a group project. Share passwords with your team and then burn the room. Have a conversation you'd rather not keep. Plan something. Discuss something. Argue about something. Send each other memes and then torch the whole thing.</p>
+
+    <p>We made this tool. You decide what it's for.</p>
+
+    <div class="cta-box">
+      <h3>No questions asked</h3>
+      <p>Click the button. You'll be in a private room in about two seconds.</p>
+      <a href="/" class="cta-btn">Create a room</a>
+    </div>
+
+    <div class="post-footer">
+      <a href="/blog/zero-logs-keep-you-safe">← Previous: Zero logs keep you safe</a>
+      <a href="/blog/how-it-works">Next: How it works →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="footer-links"><a href="/">Create a room</a><a href="/blog/">Blog</a></div>
+    <p>BurnChat — No accounts. No logs. No traces.</p>
+  </footer>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Switch theme"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+  <script>
+    
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle("light");localStorage.setItem("burnchat-theme",h.classList.contains("light")?"light":"dark")}
+  </script>
+</body>
+</html>

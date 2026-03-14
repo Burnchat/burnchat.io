@@ -1,0 +1,19 @@
+# BurnChat robots.txt
+
+User-agent: *
+Allow: /
+Allow: /blog/
+Disallow: /socket.io/
+Disallow: /new
+Disallow: /admin-burnchat
+
+# Sitemap
+Sitemap: https://burnchat.io/sitemap.xml
+
+# Bing-specific
+User-agent: bingbot
+Crawl-delay: 1
+
+# Google-specific
+User-agent: Googlebot
+Allow: /
